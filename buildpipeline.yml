@@ -18,4 +18,15 @@ steps:
 - script: |
     npm install
     npm test
-  displayName: 'npm install and test'
+  displayName: 'npm install and run tests'
+
+- script: |
+    ./node_modules/.bin/cucumber-js ./GameController_ATDD --format json | ./node_modules/.bin/cucumber-junit > testresult.xml
+  displayName: "run cucumber tests"
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/testresult.xml'
+    mergeTestResults: true
+    failTaskOnFailedTests: true
