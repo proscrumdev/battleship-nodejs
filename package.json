@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "mocha": "mocha './**/*Tests.js'",
-    "cucumber": "./node_modules/.bin/cucumber-js ./GameController_ATDD --format junit",
+    "cucumber": "./node_modules/.bin/cucumber-js ./GameController_ATDD",
     "test": "npm run mocha && npm run cucumber"
   },
   "author": "",
