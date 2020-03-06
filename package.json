@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "mocha": "mocha './**/*Tests.js'",
-    "cucumber": "./node_modules/.bin/cucumber-js ./GameController_ATDD",
+    "cucumber": "./node_modules/.bin/cucumber-js ./GameController_ATDD --format junit",
     "test": "npm run mocha && npm run cucumber"
   },
   "author": "",
@@ -34,5 +34,8 @@
     "watch-ignore": [
       "lib/vendor"
     ]
+  },
+  "devDependencies": {
+    "cucumber-junit": "^1.7.1"
   }
 }
