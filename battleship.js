@@ -1,7 +1,7 @@
 const prompt = require('prompt-sync')();
 const gameController=require("./GameController/gameController.js");
 const cliColor = require('cli-color');
-const beep = require('node-beep');
+const beep = require('beepbeep');
 const position=require("./GameController/position.js");
 const letters=require("./GameController/letters.js");
 
@@ -50,7 +50,7 @@ class Battleship {
             var isHit = gameController.CheckIsHit(this.enemyFleet, position);
             if (isHit)
             {
-                beep(1);
+                beep();
 
                 console.log("                \\         .  ./");
                 console.log("              \\      .:\";'.:..\"   /");
@@ -70,7 +70,7 @@ class Battleship {
             console.log(`Computer shot in ${computerPos.column}${computerPos.row} and `+ (isHit ? `has hit your ship !` : `miss`));
             if (isHit)
             {
-                beep(1);
+                beep();
 
                 console.log("                \\         .  ./");
                 console.log("              \\      .:\";'.:..\"   /");
