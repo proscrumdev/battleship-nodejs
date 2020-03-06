@@ -36,6 +36,7 @@
     ]
   },
   "devDependencies": {
-    "cucumber-junit": "^1.7.1"
+    "cucumber-junit": "^1.7.1",
+    "mocha-junit-reporter": "^1.23.3"
   }
 }
