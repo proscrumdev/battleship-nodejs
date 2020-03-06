@@ -1,0 +1,38 @@
+{
+  "name": "battleship-nodejs",
+  "version": "1.0.0",
+  "description": "Battleship with Node JS",
+  "main": "index.js",
+  "scripts": {
+    "mocha": "mocha './**/*Tests.js'",
+    "cucumber": "./node_modules/.bin/cucumber-js ./GameController_ATDD",
+    "test": "npm run mocha && npm run cucumber"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cli-color": "^2.0.0",
+    "cucumber": "^6.0.5",
+    "enum": "^2.5.0",
+    "mocha": "^6.2.2",
+    "node-beep": "0.0.3",
+    "prompt-sync": "^4.2.0"
+  },
+  "mocha": {
+    "diff": true,
+    "extension": [
+      "js"
+    ],
+    "opts": false,
+    "reporter": "spec",
+    "slow": 75,
+    "timeout": 2000,
+    "ui": "bdd",
+    "watch-files": [
+      "**.Tests/**.js"
+    ],
+    "watch-ignore": [
+      "lib/vendor"
+    ]
+  }
+}
