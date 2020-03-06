@@ -1,12 +1,12 @@
 const assert = require('assert').strict;
-const gameController=require("../GameController/gameController.js");
-const letters=require("../GameController/letters.js");
-const position=require("../GameController/position.js")
-const ship=require("../GameController/ship");
+const gameController = require("../GameController/gameController.js");
+const letters = require("../GameController/letters.js");
+const position = require("../GameController/position.js")
+const ship = require("../GameController/ship");
 
-describe('isShipValidTests', function() {
+describe('isShipValidTests', function () {
 
-  it('should return true if the ship is valid', function() {
+  it('should return true if the ship is valid', function () {
     var testship = new ship("Battleship", 3, 0);
     testship.addPosition(new position(letters.A, 1));
     testship.addPosition(new position(letters.A, 2));
@@ -16,12 +16,10 @@ describe('isShipValidTests', function() {
     assert.ok(actual);
   });
 
-  it('should return false if the ship is invalid', function() {
+  it('should return false if the ship is invalid', function () {
     var testship = new ship("Battleship", 3, 0);
 
     var actual = gameController.isShipValid(testship);
     assert.ok(!actual);
   });
 });
-
-

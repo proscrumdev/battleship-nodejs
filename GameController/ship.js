@@ -1,6 +1,5 @@
-class Ship
-{
-    constructor (name, size, color) {
+class Ship {
+    constructor(name, size, color) {
         this.name = name;
         this.size = size;
         this.color = color;
