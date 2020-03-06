@@ -124,14 +124,6 @@ class Battleship {
                 ship.addPosition(Battleship.ParsePosition(position));
             }
         })
-
-        this.myFleet.forEach(function(ship) {
-            console.log();
-            console.log(`Ship ${ship.name} (size: ${ship.size})`);
-            for (var i = 0; i < ship.size; i++) {
-                console.log(ship.positions[i]);
-            }
-        })
     }
 
     InitializeEnemyFleet()
