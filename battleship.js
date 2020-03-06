@@ -1,4 +1,4 @@
-const prompt = require('prompt-sync')();
+const readline = require('readline-sync');
 const gameController=require("./GameController/gameController.js");
 const cliColor = require('cli-color');
 const beep = require('beepbeep');
@@ -46,7 +46,7 @@ class Battleship {
             console.log();
             console.log("Player, it's your turn");
             console.log("Enter coordinates for your shot :");
-            var position = Battleship.ParsePosition(prompt());
+            var position = Battleship.ParsePosition(readline.question());
             var isHit = gameController.CheckIsHit(this.enemyFleet, position);
             if (isHit)
             {
@@ -120,7 +120,7 @@ class Battleship {
             console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
             for (var i = 1; i < ship.size+1; i++) {
                 console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
-                const position = prompt();
+                const position = readline.question();
                 ship.addPosition(Battleship.ParsePosition(position));
             }
         })
