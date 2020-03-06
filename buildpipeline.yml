@@ -17,16 +17,19 @@ steps:
 
 - script: |
     npm install
-    npm run mocha
-  displayName: 'npm install and run tests'
+  displayName: 'npm install'
 
 - script: |
-    ./node_modules/.bin/cucumber-js ./GameController_ATDD --format json | ./node_modules/.bin/cucumber-junit > testresult.xml
+    ./node_modules/.bin/mocha ./**/*Tests.js --reporter mocha-junit-reporter --reporter-options mochaFile=testresults_mocha.xml
+  displayName: "run cucumber tests"
+
+- script: |
+    ./node_modules/.bin/cucumber-js ./GameController_ATDD --format json | ./node_modules/.bin/cucumber-junit > testresults_cucumber.xml
   displayName: "run cucumber tests"
 
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: '**/testresult.xml'
+    testResultsFiles: '**/testresult*.xml'
     mergeTestResults: true
     failTaskOnFailedTests: true
