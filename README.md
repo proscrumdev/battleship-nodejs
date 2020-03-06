@@ -40,4 +40,11 @@ Execute Cucumber-js tests
 
 ## Docker
 
-We will provide some Docker support very soon.
+To run and test the project in a container, use these steps:
+
+```bash
+docker run -it -v ${PWD}:/battleship -w /battleship node bash
+npm install
+npm test
+node index.js
+```
