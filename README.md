@@ -9,6 +9,9 @@ A simple game of Battleship, written in NodeJs.
 # Getting started
 
 To edit and debug this project, you can use [Visual Studio Code](https://code.visualstudio.com/) or any other suitable editor.
+You might want to install these extensions to better support this project in VSCode:
+* Mocha Test Explorer https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-mocha-test-adapter
+* Cucumber (Gherkin) Full Support https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete
 
 ## Run locally
 
