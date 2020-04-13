@@ -33,3 +33,9 @@ steps:
     testResultsFiles: '**/testresult*.xml'
     mergeTestResults: true
     failTaskOnFailedTests: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
