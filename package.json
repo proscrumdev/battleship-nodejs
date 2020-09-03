@@ -15,7 +15,6 @@
     "cli-color": "^2.0.0",
     "enum": "^2.5.0",
     "mocha": "^7.2.0",
-    "nexe": "^3.3.7",
     "prompt-sync": "^4.2.0",
     "readline-sync": "^1.4.10",
     "cucumber": "latest"
