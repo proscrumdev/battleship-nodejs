@@ -16,8 +16,7 @@
     "enum": "^2.5.0",
     "mocha": "^7.2.0",
     "prompt-sync": "^4.2.0",
-    "readline-sync": "^1.4.10",
-    "cucumber": "latest"
+    "readline-sync": "^1.4.10"
   },
   "mocha": {
     "diff": true,
@@ -37,6 +36,7 @@
     ]
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^7.0.0-rc.0",
     "cucumber-junit": "^1.7.1",
     "mocha-junit-reporter": "^1.23.3"
   }

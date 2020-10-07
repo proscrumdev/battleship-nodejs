@@ -1,4 +1,4 @@
-const { Given, When, Then, defineParameterType } = require("cucumber");
+const { Given, When, Then, defineParameterType } = require("@cucumber/cucumber");
 const assert = require('assert').strict;
 const shipDef = require("../../GameController/ship.js");
 const position = require("../../GameController/position.js");
