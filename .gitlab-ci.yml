@@ -1,0 +1,43 @@
+image: node:14
+
+stages: 
+  - unit-test
+  - acceptance-test
+  - analysis
+
+cache: 
+  paths: 
+    - ./node_modules
+
+unit test:
+  stage: unit-test
+  before_script:
+  - npm install
+  script:
+  - ./node_modules/.bin/mocha ./**/*Tests.js --reporter mocha-junit-reporter --reporter-options mochaFile=testresults_mocha.xml
+  artifacts:
+    paths: 
+      - testresults_mocha.xml
+    expire_in: 1 week
+    reports:
+      junit: testresults_mocha.xml
+
+acceptance test: 
+  stage: acceptance-test
+  before_script:
+  - npm install
+  script: 
+  - ./node_modules/.bin/cucumber-js ./GameController_ATDD --format json | ./node_modules/.bin/cucumber-junit > testresults_cucumber.xml
+  artifacts: 
+    paths: 
+      - testresults_cucumber.xml
+    expire_in: 1 week
+    reports: 
+      junit: testresults_cucumber.xml
+
+sonar:
+  stage: analysis
+  image: mercuriete/sonar-scanner
+  script:
+  - sonar-scanner -Dsonar.host.url=$$$SONAR_URL$$$ -Dsonar.projectKey=$$$SONAR_PROJECT_KEY$$$ -Dsonar.projectName=$$$SONAR_PROJECT_KEY$$$ 
+
