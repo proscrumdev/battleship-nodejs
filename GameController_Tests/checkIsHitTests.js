@@ -16,7 +16,7 @@ describe('checkIsHitTests', function () {
       counter++;
     })
     var actual = gameController.CheckIsHit(ships, new position(letters.B, 3));
-    assert.ok(actual);
+    assert.ok(actual.isHit);
   });
 
   it('should return false if there is no ship at the shooting position', function () {
@@ -29,10 +29,10 @@ describe('checkIsHitTests', function () {
       counter++;
     })
     var actual = gameController.CheckIsHit(ships, new position(letters.G, 1));
-    assert.strictEqual(actual, false);
+    assert.strictEqual(actual.isHit, false);
   });
 
-  it('should throw an exception if positstion is undefined', function () {
+  it('should throw an exception if position is undefined', function () {
     var ships = gameController.InitializeShips();
     assert.throws(
       () => {

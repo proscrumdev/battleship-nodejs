@@ -45,7 +45,7 @@ class Battleship {
             console.log(cliColor.pink("Player, it's your turn"));
             console.log(cliColor.pink("Enter coordinates for your shot (E.G A1 or press control + C to exit):"));
             var position = Battleship.ParsePosition(readline.question());
-            var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+            var {isHit, isSunk} = gameController.CheckIsHit(this.enemyFleet, position);
             console.log();
             console.log();
             if (isHit) {
@@ -59,9 +59,13 @@ class Battleship {
                 console.log(cliColor.blue("Miss"));
             }
 
+            if (isSunk) {
+                console.log(cliColor.redBright(`You sunk my ${isSunk.name}!`))
+            }
+
 
             var computerPos = this.GetRandomPosition();
-            var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+            var {isHit, isSunk} = gameController.CheckIsHit(this.myFleet, computerPos);
             console.log();
             console.log();
             console.log();
@@ -69,9 +73,11 @@ class Battleship {
 
             if (isHit) {
                 beep();
-
                 this.displayHit()
             }
+
+            if (isSunk) {
+                console.log(cliColor.redBright(`Your ${isSunk.name} has been sunk!`));
         }
         while (true);
     }

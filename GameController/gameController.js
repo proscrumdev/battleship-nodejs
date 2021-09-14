@@ -22,9 +22,16 @@ class GameController {
             ship.positions.forEach(position => {
                 if (position.row == shot.row && position.column == shot.column)
                     returnvalue = true;
+                    position.hit();
             });
         });
-        return returnvalue;
+
+        const ship = ships.find(ship => ship.isSunk());
+        if (ship) {
+            ships = ships.filter(ship => ship.name !== isSunk.name)
+        }
+
+        return { isHit, isSunk: ship };
     }
 
     static isShipValid(ship) {
