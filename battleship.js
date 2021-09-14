@@ -48,18 +48,15 @@ class Battleship {
             var isHit = gameController.CheckIsHit(this.enemyFleet, position);
             if (isHit) {
                 beep();
-
-                console.log("                \\         .  ./");
-                console.log("              \\      .:\";'.:..\"   /");
-                console.log("                  (M^^.^~~:.'\").");
-                console.log("            -   (/  .    . . \\ \\)  -");
-                console.log("               ((| :. ~ ^  :. .|))");
-                console.log("            -   (\\- |  \\ /  |  /)  -");
-                console.log("                 -\\  \\     /  /-");
-                console.log("                   \\  \\   /  /");
+                this.displayHit()
             }
 
-            console.log(isHit ? "Yeah ! Nice hit !" : "Miss");
+            if (isHit) {
+                console.log(cliColor.red("Yeah ! Nice hit !"))
+            } else {
+                console.log(cliColor.blue("Miss"));
+            }
+
 
             var computerPos = this.GetRandomPosition();
             var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
@@ -68,14 +65,7 @@ class Battleship {
             if (isHit) {
                 beep();
 
-                console.log("                \\         .  ./");
-                console.log("              \\      .:\";'.:..\"   /");
-                console.log("                  (M^^.^~~:.'\").");
-                console.log("            -   (/  .    . . \\ \\)  -");
-                console.log("               ((| :. ~ ^  :. .|))");
-                console.log("            -   (\\- |  \\ /  |  /)  -");
-                console.log("                 -\\  \\     /  /-");
-                console.log("                   \\  \\   /  /");
+                this.displayHit()
             }
         }
         while (true);
@@ -142,6 +132,17 @@ class Battleship {
 
         this.enemyFleet[4].addPosition(new position(letters.C, 5));
         this.enemyFleet[4].addPosition(new position(letters.C, 6));
+    }
+
+    displayHit() {
+        console.log(cliColor.red("                \\         .  ./"));
+        console.log(cliColor.red("              \\      .:\";'.:..\"   /"));
+        console.log(cliColor.red("                  (M^^.^~~:.'\")."));
+        console.log(cliColor.red("            -   (/  .    . . \\ \\)  -"));
+        console.log(cliColor.red("               ((| :. ~ ^  :. .|))"));
+        console.log(cliColor.red("            -   (\\- |  \\ /  |  /)  -"));
+        console.log(cliColor.red("                 -\\  \\     /  /-"));
+        console.log(cliColor.red("                   \\  \\   /  /"));
     }
 }
 
