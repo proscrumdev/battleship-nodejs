@@ -42,8 +42,8 @@ class Battleship {
 
         do {
             console.log();
-            console.log(cliColor.pink("Player, it's your turn"));
-            console.log(cliColor.pink("Enter coordinates for your shot (E.G A1 or press control + C to exit):"));
+            console.log(cliColor.magenta("Player, it's your turn"));
+            console.log(cliColor.magenta("Enter coordinates for your shot (E.G A1 or press control + C to exit):"));
             var position = Battleship.ParsePosition(readline.question());
             var {isHit, isSunk} = gameController.CheckIsHit(this.enemyFleet, position);
             console.log();
@@ -60,7 +60,11 @@ class Battleship {
             }
 
             if (isSunk) {
-                console.log(cliColor.redBright(`You sunk my ${isSunk.name}!`))
+                this.enemyFleet = this.enemyFleet.filter(ship => ship.name !== isSunk.name);
+                console.log(cliColor.redBright(`You sunk my ${isSunk.name}!`));
+                const remainingShips = this.enemyFleet.reduce((a, b) => `${a && a + ', '}${b.name}`, '');
+                console.log();
+                console.log(cliColor.magenta(`${remainingShips} remaining.`));
             }
 
 
@@ -77,7 +81,11 @@ class Battleship {
             }
 
             if (isSunk) {
+                this.myFleet = this.myFleet.filter(ship => ship.name !== isSunk.name);
                 console.log(cliColor.redBright(`Your ${isSunk.name} has been sunk!`));
+                const remainingShips = this.myFleet.reduce((a, b) => `${a && a + ', '}${b.name}`, '');
+                console.log();
+                console.log(cliColor.yellow(`${remainingShips} remaining.`));
             }
         }
         while (true);

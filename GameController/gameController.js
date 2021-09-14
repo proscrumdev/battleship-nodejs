@@ -20,18 +20,15 @@ class GameController {
         var returnValue = false;
         ships.forEach(function (ship) {
             ship.positions.forEach(position => {
-                if (position.row == shot.row && position.column == shot.column)
+                if (position.row == shot.row && position.column == shot.column) {
                     returnValue = true;
                     position.hit();
+                }
             });
         });
 
-        const ship = ships.find(ship => ship.isSunk());
-        if (ship) {
-            ships = ships.filter(({ name }) => name !== ship.name)
-        }
-
-        return { isHit: returnValue, isSunk: ship };
+        const isSunk = ships.find(ship => ship.isSunk());
+        return { isHit: returnValue, isSunk };
     }
 
     static isShipValid(ship) {
