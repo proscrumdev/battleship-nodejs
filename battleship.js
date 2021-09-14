@@ -46,18 +46,7 @@ class Battleship {
             console.log("Enter coordinates for your shot :");
             var position = Battleship.ParsePosition(readline.question());
             var isHit = gameController.CheckIsHit(this.enemyFleet, position);
-            if (isHit) {
-                beep();
-
-                console.log("                \\         .  ./");
-                console.log("              \\      .:\";'.:..\"   /");
-                console.log("                  (M^^.^~~:.'\").");
-                console.log("            -   (/  .    . . \\ \\)  -");
-                console.log("               ((| :. ~ ^  :. .|))");
-                console.log("            -   (\\- |  \\ /  |  /)  -");
-                console.log("                 -\\  \\     /  /-");
-                console.log("                   \\  \\   /  /");
-            }
+            this.PrintHitsMisses(isHit)
 
             console.log(isHit ? "Yeah ! Nice hit !" : "Miss");
 
@@ -65,18 +54,7 @@ class Battleship {
             var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
             console.log();
             console.log(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`));
-            if (isHit) {
-                beep();
-
-                console.log("                \\         .  ./");
-                console.log("              \\      .:\";'.:..\"   /");
-                console.log("                  (M^^.^~~:.'\").");
-                console.log("            -   (/  .    . . \\ \\)  -");
-                console.log("               ((| :. ~ ^  :. .|))");
-                console.log("            -   (\\- |  \\ /  |  /)  -");
-                console.log("                 -\\  \\     /  /-");
-                console.log("                   \\  \\   /  /");
-            }
+            this.PrintHitsMisses(isHit)
         }
         while (true);
     }
@@ -85,6 +63,43 @@ class Battleship {
         var letter = letters.get(input.toUpperCase().substring(0, 1));
         var number = parseInt(input.substring(1, 2), 10);
         return new position(letter, number);
+    }
+
+    PrintHitsMisses(isHit) {
+        if (isHit) {
+            beep();
+
+            console.log(cliColor.red("                \\         .  ./"));
+            console.log(cliColor.red("              \\      .:\";'.:..\"   /"));
+            console.log(cliColor.red("                  (M^^.^~~:.'\")."));
+            console.log(cliColor.red("            -   (/  .    . . \\ \\)  -"));
+            console.log(cliColor.red("               ((| :. ~ ^  :. .|))"));
+            console.log(cliColor.red("            -   (\\- |  \\ /  |  /)  -"));
+            console.log(cliColor.red("                 -\\  \\     /  /-"));
+            console.log(cliColor.red("                   \\  \\   /  /"));
+            console.log(cliColor.blue("   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+            console.log(cliColor.blue("   ^^^^  ^^  ^^^ ^^ ^^ ^ ^^^ ^ ^^^ ^^^ ^^ ^^^^^"));
+            console.log(cliColor.blue("     ^^^ ^^^ ^^ ^^^ ^ ^ ^^ ^ ^^ ^^^^ ^^ ^^^ ^^  "));
+        } else {
+            console.log(cliColor.blue("                    .MHMH           X:"));
+             console.log(cliColor.blue("                    :HMMH.      .X!HMM."));
+             console.log(cliColor.blue("                    `HMHM!      !MHMMX"));
+             console.log(cliColor.blue("                     HMHHH.      IMM!"));
+             console.log(cliColor.blue(".                    XHHHHM!"));
+             console.log(cliColor.blue(" XMMM!.              IMHXHMM.                  :I."));
+             console.log(cliColor.blue("  `HMHMMI.          :HHXXHH'                .AMH'"));
+             console.log(cliColor.blue("   `VMHHM!          HHXIHH                :MHH'"));
+             console.log(cliColor.blue(".   `!HHHA.         XHIIIX.    .MX     .:HD  AHHV"));
+             console.log(cliColor.blue(".    `HHHA.         !HI!IXI    AM:    AMHH'.:HHM"));
+             console.log(cliColor.blue(".      `XXHA.      . `HI!:IX   :HH    AHHMV .IX"));
+             console.log(cliColor.blue("        `!XIX:.  AMA:.H!::IX.  !HX   AHHHV :I"));
+             console.log(cliColor.blue("         `XIXX: :HHHHHI. .HMMMXXH: !XIHHHII"));
+             console.log(cliColor.blue("          `X!:IXIMHHXHI.  IHHH!HX.!IIXH!.I"));
+             console.log(cliColor.blue(".          `H:.:!IHHXII:  .XH!!HMI::X! :X"));
+             console.log(cliColor.blue("            :MI. .!!II!:  :II.!H!.:I:.I		"));		  
+             console.log(cliColor.blue("   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")); 
+             console.log(cliColor.blue("   ^^^^  ^^  ^^^ ^^ ^^ ^ ^^^ ^ ^^^ ^^^ ^^ ^^^^^"));
+        }
     }
 
     GetRandomPosition() {
