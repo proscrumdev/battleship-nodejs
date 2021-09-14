@@ -1,4 +1,4 @@
-name: Build and Deploy Storybook
+name: Run Unit Tests
 on:
   push:
 jobs:
