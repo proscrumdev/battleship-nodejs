@@ -20,8 +20,10 @@ class GameController {
         var returnvalue = false;
         ships.forEach(function (ship) {
             ship.positions.forEach(position => {
-                if (position.row == shot.row && position.column == shot.column)
+                if (position.row == shot.row && position.column == shot.column) {
+                    ship.addHit(position);
                     returnvalue = true;
+                }
             });
         });
         return returnvalue;
