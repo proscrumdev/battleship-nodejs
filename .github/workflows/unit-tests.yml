@@ -1,0 +1,17 @@
+name: Build and Deploy Storybook
+on:
+  push:
+jobs:
+  run-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Build and Deploy
+        env:
+          GH_TOKEN: ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm ci
+          npm run test
