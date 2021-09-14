@@ -1,5 +1,6 @@
 
 [![Build status](https://dev.azure.com/APS-SD-Stewards/APS-SD/_apis/build/status/proscrumdev.battleship-cpp-CI)](https://dev.azure.com/APS-SD-Stewards/APS-SD/_build/latest?definitionId=22)
+![Unit Tests](https://github.com/Fountain-PhillipSmith/battleship-nodejs/actions/workflows/unit-tests.yml/badge.svg)
 
 # Battleship NodeJs
 
