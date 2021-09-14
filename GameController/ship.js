@@ -11,7 +11,7 @@ class Ship {
     }
 
     isSunk() {
-        return positions.every(position => position.hit);
+        return this.positions.every(position => position.isHit);
     }
 }
 

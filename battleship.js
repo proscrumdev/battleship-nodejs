@@ -78,6 +78,7 @@ class Battleship {
 
             if (isSunk) {
                 console.log(cliColor.redBright(`Your ${isSunk.name} has been sunk!`));
+            }
         }
         while (true);
     }
