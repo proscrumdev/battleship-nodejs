@@ -4,6 +4,7 @@ const cliColor = require('cli-color');
 const beep = require('beepbeep');
 const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
+const Fleet = require("./GameController/fleet.js");
 
 class Battleship {
 
@@ -46,7 +47,7 @@ class Battleship {
             this.PrintEnemyFleet();
             console.log("Enter coordinates for your shot (e.g. A3):");
             var position = Battleship.ParsePosition(readline.question());
-            var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+            var isHit = gameController.CheckIsHit(this.enemyFleet.ships, position);
             if (isHit) {
                 beep();
 
@@ -66,7 +67,7 @@ class Battleship {
 
 
             var computerPos = this.GetRandomPosition();
-            var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+            var isHit = gameController.CheckIsHit(this.myFleet.ships, computerPos);
             console.log();
             if (isHit) {
                 console.log(cliColor.red(`Computer shot in ${computerPos.column}${computerPos.row} and has hit your ship !\n`));
@@ -106,16 +107,18 @@ class Battleship {
     }
 
     InitializeGame() {
+        var enemyFleet = this.InitializeEnemyFleet();
+        // console.log(enemyFleet.ships);
         this.InitializeMyFleet();
-        this.InitializeEnemyFleet();
     }
 
     InitializeMyFleet() {
+        console.log("Initializing my fleet");
         this.myFleet = gameController.InitializeShips();
 
         console.log("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
-        this.myFleet.forEach(function (ship) {
+        this.myFleet.ships.forEach(function (ship) {
             console.log();
             console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
             for (var i = 1; i < ship.size + 1; i++) {
@@ -127,34 +130,39 @@ class Battleship {
     }
 
     InitializeEnemyFleet() {
-        this.enemyFleet = gameController.InitializeShips();
+        console.log("Initializing enemy fleet");
+        // this.enemyFleet = gameController.InitializeShips();
+        this.enemyFleet = new Fleet();
 
-        this.enemyFleet[0].addPosition(new position(letters.B, 4));
-        this.enemyFleet[0].addPosition(new position(letters.B, 5));
-        this.enemyFleet[0].addPosition(new position(letters.B, 6));
-        this.enemyFleet[0].addPosition(new position(letters.B, 7));
-        this.enemyFleet[0].addPosition(new position(letters.B, 8));
+        console.log("calling placeShipsRandomly");
+        this.enemyFleet.placeShipsRandomly();
+        return this.enemyFleet;
+        // this.enemyFleet[0].addPosition(new position(letters.B, 4));
+        // this.enemyFleet[0].addPosition(new position(letters.B, 5));
+        // this.enemyFleet[0].addPosition(new position(letters.B, 6));
+        // this.enemyFleet[0].addPosition(new position(letters.B, 7));
+        // this.enemyFleet[0].addPosition(new position(letters.B, 8));
 
-        this.enemyFleet[1].addPosition(new position(letters.E, 6));
-        this.enemyFleet[1].addPosition(new position(letters.E, 7));
-        this.enemyFleet[1].addPosition(new position(letters.E, 8));
-        this.enemyFleet[1].addPosition(new position(letters.E, 9));
+        // this.enemyFleet[1].addPosition(new position(letters.E, 6));
+        // this.enemyFleet[1].addPosition(new position(letters.E, 7));
+        // this.enemyFleet[1].addPosition(new position(letters.E, 8));
+        // this.enemyFleet[1].addPosition(new position(letters.E, 9));
 
-        this.enemyFleet[2].addPosition(new position(letters.A, 3));
-        this.enemyFleet[2].addPosition(new position(letters.B, 3));
-        this.enemyFleet[2].addPosition(new position(letters.C, 3));
+        // this.enemyFleet[2].addPosition(new position(letters.A, 3));
+        // this.enemyFleet[2].addPosition(new position(letters.B, 3));
+        // this.enemyFleet[2].addPosition(new position(letters.C, 3));
 
-        this.enemyFleet[3].addPosition(new position(letters.F, 8));
-        this.enemyFleet[3].addPosition(new position(letters.G, 8));
-        this.enemyFleet[3].addPosition(new position(letters.H, 8));
+        // this.enemyFleet[3].addPosition(new position(letters.F, 8));
+        // this.enemyFleet[3].addPosition(new position(letters.G, 8));
+        // this.enemyFleet[3].addPosition(new position(letters.H, 8));
 
-        this.enemyFleet[4].addPosition(new position(letters.C, 5));
-        this.enemyFleet[4].addPosition(new position(letters.C, 6));
+        // this.enemyFleet[4].addPosition(new position(letters.C, 5));
+        // this.enemyFleet[4].addPosition(new position(letters.C, 6));
     }
 
     PrintEnemyFleet() {
         console.log("\nEnemy fleet :\n");
-        this.enemyFleet.forEach(function (ship) {
+        this.enemyFleet.ships.forEach(function (ship) {
             if (ship.isSunk() === "Sunk") {
                 console.log(cliColor.green(`${ship.name} : ${ship.isSunk()}`));
             } else {
@@ -166,42 +174,3 @@ class Battleship {
 }
 
 module.exports = Battleship;
-
-/*
-
-                :           :
-               t#,         t#,
-  .           ;##W.       ;##W.                        ;f.
-  Ef.        :#L:WE      :#L:WE             ..       : i##:
-  E#Wi      .KG  ,#D    .KG  ,#D           ,W,     .Et i##:
-  E#K#D:    EE    ;#f   EE    ;#f         t##,    ,W#t i##:
-  E#t,E#f. f#.     t#i f#.     t#i       L###,   j###t i##:
-  E#WEE##Wt:#G     GK  :#G     GK      .E#j##,  G#fE#t i##:
-  E##Ei;;;;.;#L   LW.   ;#L   LW.     ;WW; ##,:K#i E#t i##:
-  E#DWWt     t#f f#:     t#f f#:     j#E.  ##f#W,  E#t i##:
-  E#t f#K;    f#D#;       f#D#;    .D#L    ###K:   E#t i#W.
-  E#Dfff##E,   G#t         G#t    :K#t     ##D.    E#t ,i.
-  jLLLLLLLLL;   t           t     ...      #G      ..  :G#:
-                                           j           iKt
-
-*/
-
-/* Colossal
-888888b.    .d88888b.   .d88888b.  888b     d888 888
-888  "88b  d88P" "Y88b d88P" "Y88b 8888b   d8888 888
-888  .88P  888     888 888     888 88888b.d88888 888
-8888888K.  888     888 888     888 888Y88888P888 888
-888  "Y88b 888     888 888     888 888 Y888P 888 888
-888    888 888     888 888     888 888  Y8P  888 Y8P
-888   d88P Y88b. .d88P Y88b. .d88P 888   "   888  "
-8888888P"   "Y88888P"   "Y88888P"  888       888 888
-
-
-
-*/
-
-/* BigFig
- _  _  _     |
-|_)/ \/ \|V| |
-|_)\_/\_/| | o
-*/
