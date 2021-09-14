@@ -17,14 +17,21 @@ class GameController {
             throw "The shooting position is not defined";
         if (ships == undefined)
             throw "No ships defined";
-        var returnvalue = false;
+        var returnValue = false;
         ships.forEach(function (ship) {
             ship.positions.forEach(position => {
                 if (position.row == shot.row && position.column == shot.column)
-                    returnvalue = true;
+                    returnValue = true;
+                    position.hit();
             });
         });
-        return returnvalue;
+
+        const ship = ships.find(ship => ship.isSunk());
+        if (ship) {
+            ships = ships.filter(({ name }) => name !== ship.name)
+        }
+
+        return { isHit: returnValue, isSunk: ship };
     }
 
     static isShipValid(ship) {

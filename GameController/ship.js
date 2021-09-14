@@ -9,6 +9,10 @@ class Ship {
     addPosition(position) {
         this.positions.push(position);
     }
+
+    isSunk() {
+        return this.positions.every(position => position.isHit);
+    }
 }
 
 module.exports = Ship;
