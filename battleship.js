@@ -63,6 +63,9 @@ class Battleship {
             console.log();
             console.log(cliColor.yellow(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? cliColor.red(`has hit your ship !`) : cliColor.blue('miss'))));
             console.log();
+            console.log();
+            console.log();
+            console.log();
             if (isHit) {
                 beep();
 
