@@ -13,6 +13,7 @@ const utils = require("./GameController/utils.js");
 class Battleship {
 
   start() {
+    console.clear();
     displayGraphic.battleship(cliColor.magenta);
     console.log();
 
@@ -23,13 +24,16 @@ class Battleship {
   StartGame() {
     // console.clear();
     // displayGraphic.cannon();
+    const { handleActionAi, handleActionPlayer } = utils;
 
     do {
-      console.log();
-      console.log(cliColor.magenta("Player, it's your turn"));
-      console.log(cliColor.magenta("Enter coordinates for your shot (E.G A1 or press control + C to exit):"));
-      var position = Battleship.ParsePosition(readline.question());
-      var {isHit, isSunk} = gameController.CheckIsHit(this.enemyFleet, position);
+      // console.log();
+      // console.log(cliColor.magenta("Player, it's your turn"));
+      // console.log(cliColor.magenta("Enter coordinates for your shot (E.G A1 or press control + C to exit):"));
+      // var position = Battleship.ParsePosition(readline.question());
+      const getPlayerPositionCallback = () => readline.question();
+      const playerPosition = handleActionPlayer(getPlayerPositionCallback)
+      var {isHit, isSunk} = gameController.CheckIsHit(this.enemyFleet, playerPosition);
       console.log();
       console.log();
       if (isHit) {
@@ -45,7 +49,7 @@ class Battleship {
 
       console.log();
       console.log(cliColor.yellowBright("Enemy Tracker"));
-      this.myTrackerBoard.update(position, this.enemyBoard);
+      this.myTrackerBoard.update(playerPosition, this.enemyBoard);
       this.myTrackerBoard.render();
 
       console.log();
@@ -62,12 +66,13 @@ class Battleship {
       // }
 
 
-      var computerPos = this.GetRandomPosition();
-      var {isHit, isSunk} = gameController.CheckIsHit(this.myFleet, computerPos);
+      const getAiPositionCallback = () => this.GetRandomPosition();
+      const aiPosition = handleActionAi(getAiPositionCallback);
+      var {isHit, isSunk} = gameController.CheckIsHit(this.myFleet, aiPosition);
       console.log();
       console.log();
       console.log();
-      console.log(cliColor.yellow(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? cliColor.red(`has hit your ship !`) : cliColor.blue('miss'))));
+      console.log(cliColor.yellow(`Computer shot in ${aiPosition.column}${aiPosition.row} and ` + (isHit ? cliColor.red(`has hit your ship !`) : cliColor.blue('miss'))));
 
       if (isHit) {
         beep();
@@ -92,13 +97,12 @@ class Battleship {
   }
 
   GetRandomPosition() {
-    var rows = 8;
-    var lines = 8;
-    var rndColumn = Math.floor((Math.random() * lines));
-    var letter = letters.get(rndColumn + 1);
-    var number = Math.floor((Math.random() * rows));
-    var result = new position(letter, number);
-    return result;
+    const rows = 8;
+    const lines = 8;
+    const rndColumn = Math.floor((Math.random() * lines));
+    const letter = letters.get(rndColumn + 1);
+    const number = Math.floor((Math.random() * rows));
+    return `${letter}${number}`;
   }
 
   InitializeGame() {
@@ -154,7 +158,7 @@ class Battleship {
     // this.enemyFleet[4].addPosition(new position(letters.C, 6));
 
     this.enemyBoard = new GameBoardState(this.enemyFleet);
-    this.enemyBoard.render();
+    // this.enemyBoard.render();
     this.enemyTrackerBoard = new GameBoardTracker();
   }
 }

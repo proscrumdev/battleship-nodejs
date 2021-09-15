@@ -21,7 +21,7 @@ const validatePositionInput = (input) => {
   if (!isNaN(Number(letter)) || !letter.match(/[a-hA-H]/)) {
     throw new Error('Your ship\'s position should start with a letter A-H');
   }
-  if (isNaN(Number(number)) || Number(number) > 8 || Number(number) < 1) {
+  if (isNaN(Number(number)) || !number.match(/[1-8]/)) {
     throw new Error('Your ship\'s position should end with a number 1-8');
   }
 }
@@ -48,6 +48,56 @@ const setPlayerPosition = (index, ship) => {
       continue;
     }
   }
+}
+
+const handleAction = (
+  getPositionCallback = () => {},
+  promptMessageCallback = () => {},
+  errorMessageCallback = () => {}
+) => {
+  let position;
+  while (true) {
+    promptMessageCallback();
+    const input = getPositionCallback();
+    try {
+      validatePositionInput(input);
+      position = parsePosition(input);
+      break;
+    }
+    catch (error) {
+      console.log();
+      console.log(cliColor.yellowBright('You must choose a valid target'));
+      console.log(cliColor.yellowBright(error.message))
+      continue;
+    }
+  }
+  return position;
+}
+
+const handleActionPlayer = (getPositionCallback = () => {}) => {
+  console.log();
+  console.log(cliColor.magenta("Player, it's your turn"));
+
+  const promptMessageCallback = () =>
+    console.log(cliColor.magenta("Enter coordinates for your shot (E.G A1 or press control + C to exit):"));
+  const errorMessageCallback = (error) => {
+    console.log();
+    console.log(cliColor.yellowBright('You must choose a valid target'));
+    console.log(cliColor.yellowBright(error.message))
+  }
+  return handleAction(getPositionCallback, promptMessageCallback, errorMessageCallback);
+}
+
+const handleActionAi = (getPositionCallback = () => {}) => {
+  const
+  // const promptMessageCallback = () =>
+  //   console.log(cliColor.green("ai firing"));
+  // const errorMessageCallback = (error) => {
+  //   console.log();
+  //   console.log(cliColor.green('ai must choose a valid target'));
+  //   console.log(cliColor.green(error.message))
+  // }
+  return handleAction(getPositionCallback, promptMessageCallback, errorMessageCallback)
 }
 
 // !: local testing use only
@@ -79,4 +129,4 @@ const initializeFleet = (fleet) => {
   return updatedFleet;
 }
 
-module.exports = { initializeFleet, setPlayerPosition };
+module.exports = { handleActionAi, handleActionPlayer, initializeFleet, setPlayerPosition };
