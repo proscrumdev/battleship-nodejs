@@ -7,6 +7,7 @@ class Ship {
     }
 
     addPosition(position) {
+        // todo: add validation to prevent putting in place not on board, stacking vertically, etc
         this.positions.push(position);
     }
 
