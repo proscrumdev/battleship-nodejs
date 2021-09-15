@@ -1,9 +1,10 @@
 class Ship {
-    constructor(name, size, color) {
-        this.name = name;
-        this.size = size;
-        this.color = color;
-        this.positions = [];
+    constructor(name, size, color, icon) {
+      this.color = color;
+      this.icon = icon;
+      this.name = name;
+      this.positions = [];
+      this.size = size;
     }
 
     addPosition(position) {

@@ -1,15 +1,15 @@
-const letters = {
-  'A': 1,
-  'B': 2,
-  'C': 3,
-  'D': 4,
-  'E': 5,
-  'F': 6,
-  'G': 7,
-  'H': 8
-}
-
 class GameBoard {
+  LETTERS = {
+    'A': 1,
+    'B': 2,
+    'C': 3,
+    'D': 4,
+    'E': 5,
+    'F': 6,
+    'G': 7,
+    'H': 8
+  }
+
   EMPTY = ' ';
   OCCUPIED = 'X';
   HIT = '💥';
@@ -18,13 +18,17 @@ class GameBoard {
   board = {};
 
   constructor() {
+    this.initializeBoard();
+  }
+
+  initializeBoard() {
     this.board =
-      Object.keys(letters)
+      Object.keys(this.LETTERS)
         .map((k, _, arr) =>
           ({
             [k]: new Array(arr.length)
                   .fill(this.EMPTY)
-                    .map((value, index) => ({ [letters[arr[index]]]: value }))
+                    .map((value, index) => ({ [this.LETTERS[arr[index]]]: value }))
                     .reduce((a, b) => ({ ...a, ...b }))
           })
         )

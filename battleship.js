@@ -8,6 +8,7 @@ const GameBoardTracker = require("./GameController/gameBoardTracker");
 const gameController = require("./GameController/gameController.js");
 const letters = require("./GameController/letters.js");
 const position = require("./GameController/position.js");
+const utils = require("./GameController/utils.js");
 
 class Battleship {
 
@@ -20,8 +21,8 @@ class Battleship {
   }
 
   StartGame() {
-    console.clear();
-    displayGraphic.cannon();
+    // console.clear();
+    // displayGraphic.cannon();
 
     do {
       console.log();
@@ -33,7 +34,7 @@ class Battleship {
       console.log();
       if (isHit) {
         beep();
-        displayGraphic.hit(cliColor.red);
+        // displayGraphic.hit(cliColor.red);
       }
 
       if (isHit) {
@@ -42,8 +43,15 @@ class Battleship {
           console.log(cliColor.blue("Miss"));
       }
 
-      this.myTrackerBoard.updateTracker(position, this.enemyBoard);
+      console.log();
+      console.log(cliColor.yellowBright("Enemy Tracker"));
+      this.myTrackerBoard.update(position, this.enemyBoard);
       this.myTrackerBoard.render();
+
+      console.log();
+      console.log();
+      console.log(cliColor.magentaBright("My Board"));
+      this.myBoard.render();
 
       // if (isSunk) {
       //     this.enemyFleet = this.enemyFleet.filter(ship => ship.name !== isSunk.name);
@@ -63,7 +71,7 @@ class Battleship {
 
       if (isHit) {
         beep();
-        displayGraphic.hit(cliColor.red);
+        // displayGraphic.hit(cliColor.red);
       }
 
       // if (isSunk) {
@@ -99,50 +107,54 @@ class Battleship {
   }
 
   InitializeMyFleet() {
-    this.myFleet = gameController.InitializeShips();
+    const { initializeFleet } = utils;
+    this.myFleet = initializeFleet(gameController.InitializeShips());
+    // this.myFleet = gameController.InitializeShips();
 
-    console.log("Please position your fleet (Game board size is from A to H and 1 to 8) :");
+    // console.log("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
-    this.myFleet.forEach(function (ship) {
-      console.log();
-      console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
-      for (var i = 1; i < ship.size + 1; i++) {
-          console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
-          const position = readline.question();
-          ship.addPosition(Battleship.ParsePosition(position));
-      }
-    })
+    // const { setPlayerPosition } = utils;
+    // this.myFleet.forEach(function (ship) {
+    //   console.log();
+    //   console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
+    //   for (var i = 1; i < ship.size + 1; i++) {
+    //     setPlayerPosition(i, ship);
+    //   }
+    // })
 
     this.myBoard = new GameBoardState(this.myFleet);
     this.myTrackerBoard = new GameBoardTracker();
   }
 
   InitializeEnemyFleet() {
-    this.enemyFleet = gameController.InitializeShips();
+    const { initializeFleet } = utils;
+    this.enemyFleet = initializeFleet(gameController.InitializeShips());
+    // this.enemyFleet = gameController.InitializeShips();
 
-    this.enemyFleet[0].addPosition(new position(letters.B, 4));
-    this.enemyFleet[0].addPosition(new position(letters.B, 5));
-    this.enemyFleet[0].addPosition(new position(letters.B, 6));
-    this.enemyFleet[0].addPosition(new position(letters.B, 7));
-    this.enemyFleet[0].addPosition(new position(letters.B, 8));
+    // this.enemyFleet[0].addPosition(new position(letters.B, 4));
+    // this.enemyFleet[0].addPosition(new position(letters.B, 5));
+    // this.enemyFleet[0].addPosition(new position(letters.B, 6));
+    // this.enemyFleet[0].addPosition(new position(letters.B, 7));
+    // this.enemyFleet[0].addPosition(new position(letters.B, 8));
 
-    this.enemyFleet[1].addPosition(new position(letters.E, 6));
-    this.enemyFleet[1].addPosition(new position(letters.E, 7));
-    this.enemyFleet[1].addPosition(new position(letters.E, 8));
-    this.enemyFleet[1].addPosition(new position(letters.E, 9));
+    // this.enemyFleet[1].addPosition(new position(letters.E, 6));
+    // this.enemyFleet[1].addPosition(new position(letters.E, 7));
+    // this.enemyFleet[1].addPosition(new position(letters.E, 8));
+    // this.enemyFleet[1].addPosition(new position(letters.E, 9));
 
-    this.enemyFleet[2].addPosition(new position(letters.A, 3));
-    this.enemyFleet[2].addPosition(new position(letters.B, 3));
-    this.enemyFleet[2].addPosition(new position(letters.C, 3));
+    // this.enemyFleet[2].addPosition(new position(letters.A, 3));
+    // this.enemyFleet[2].addPosition(new position(letters.B, 3));
+    // this.enemyFleet[2].addPosition(new position(letters.C, 3));
 
-    this.enemyFleet[3].addPosition(new position(letters.F, 8));
-    this.enemyFleet[3].addPosition(new position(letters.G, 8));
-    this.enemyFleet[3].addPosition(new position(letters.H, 8));
+    // this.enemyFleet[3].addPosition(new position(letters.F, 8));
+    // this.enemyFleet[3].addPosition(new position(letters.G, 8));
+    // this.enemyFleet[3].addPosition(new position(letters.H, 8));
 
-    this.enemyFleet[4].addPosition(new position(letters.C, 5));
-    this.enemyFleet[4].addPosition(new position(letters.C, 6));
+    // this.enemyFleet[4].addPosition(new position(letters.C, 5));
+    // this.enemyFleet[4].addPosition(new position(letters.C, 6));
 
     this.enemyBoard = new GameBoardState(this.enemyFleet);
+    this.enemyBoard.render();
     this.enemyTrackerBoard = new GameBoardTracker();
   }
 }

@@ -1,3 +1,5 @@
+const Table = require('cli-table');
+
 const Board = require('./gameBoard');
 
 class GameBoardTracker extends Board {
@@ -26,6 +28,18 @@ class GameBoardTracker extends Board {
             }
           })
       })
+  }
+
+  render() {
+    const head = ['', ...Object.values(this.LETTERS)]
+    const table = new Table({ colAligns: head.map(() => 'middle'), colWidths: head.map(() => 4), head });
+
+    Object.keys(this.board)
+      .forEach(k => {
+        table.push({ [k]: Object.values(this.board[k]) });
+      });
+
+    console.log(table.toString());
   }
 }
 

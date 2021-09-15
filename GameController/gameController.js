@@ -3,11 +3,11 @@ class GameController {
         var colors = require("cli-color");
         const Ship = require("./ship.js");
         var ships = [
-            new Ship("Aircraft Carrier", 5, colors.CadetBlue),
-            new Ship("Battleship", 4, colors.Red),
-            new Ship("Submarine", 3, colors.Chartreuse),
-            new Ship("Destroyer", 3, colors.Yellow),
-            new Ship("Patrol Boat", 2, colors.Orange)
+            new Ship("Aircraft Carrier", 5, colors.CadetBlue, '🟦'),
+            new Ship("Battleship", 4, colors.Red, '🟥'),
+            new Ship("Submarine", 3, colors.Chartreuse, '🟩'),
+            new Ship("Destroyer", 3, colors.Yellow, '🟨'),
+            new Ship("Patrol Boat", 2, colors.Orange, '🟧')
         ];
         return ships;
     }
