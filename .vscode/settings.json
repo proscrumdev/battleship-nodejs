@@ -1,0 +1,3 @@
+{
+    "mochaExplorer.files": ["Battleship_Tests/**/*.js", "GameController_Tests/**/*.js"]
+}
