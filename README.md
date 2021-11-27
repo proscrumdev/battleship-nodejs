@@ -13,6 +13,11 @@ You might want to install these extensions to better support this project in VSC
 * Cucumber (Gherkin) Full Support https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete
 
 ## Run locally
+Install packages
+
+```bash
+npm install
+```
 
 Run battleship
 
