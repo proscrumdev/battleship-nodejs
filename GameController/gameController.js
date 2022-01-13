@@ -27,19 +27,15 @@ class GameController {
                 const positionAlreadyHit = hitRows.includes(position.row) && hitCols.includes(position.col)
                 if (position.row == shot.row && position.column == shot.column)
                     //check if same position has been hit
-                    if(positionAlreadyHit){
-                        returnValue = false;
-                    }
-                    else{
-                        //add 
-                        ship.hits.push({row: position.row, col : position.col})
-                        returnvalue = true;
-                    }
+                    if(!positionAlreadyHit){
+                    //add row and col to ships hit array
+                    ship.hits.push({row: position.row, col : position.col})
+                    returnvalue = true;
                     
                     if(ship.hits.length === ship.size){
                         ship.isSunk = true
                     }
-                   
+                }
             });
         });
         return returnvalue;
