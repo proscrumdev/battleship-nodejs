@@ -60,6 +60,7 @@ class Battleship {
             const playerWin = gameController.CheckGameOver(this.enemyFleet);
             if(playerWin){
                 haveWinner = true
+                console.log('You have sunk all the enemy ships! Woot woot!')
             }
             
             if(!playerWin){
@@ -80,6 +81,7 @@ class Battleship {
                 let computerWin = gameController.CheckGameOver(this.myFleet);
                 
                 if(computerWin){
+                    console.log('You have lost all your ships to the enemy! You lose =(')
                     haveWinner = true
                 }
             }
