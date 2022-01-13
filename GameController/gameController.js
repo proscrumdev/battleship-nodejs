@@ -13,8 +13,7 @@ class GameController {
     }
 
     static CheckIsHit(ships, shot) {
-        console.log('========DISPLAYING ships==============')
-        console.log(ships)
+
         if (shot == undefined)
             throw "The shooting position is not defined";
         if (ships == undefined)
@@ -25,13 +24,14 @@ class GameController {
                 //create arrays of already hit columns and rows
                 const hitRows = ship.hits.map( hit => { return  hit.row  } )
                 const hitCols = ship.hits.map( hit => { return  hit.col  } )
-                const positionAlreadyHot = position.row == shot.row && position.column == shot.column
-                if (positionAlreadyHot)
-
-                    if(hitRows.includes(position.row) && hitCols.includes(position.col) ){
+                const positionAlreadyHit = hitRows.includes(position.row) && hitCols.includes(position.col)
+                if (position.row == shot.row && position.column == shot.column)
+                    //check if same position has been hit
+                    if(positionAlreadyHit){
                         returnValue = false;
                     }
                     else{
+                        //add 
                         ship.hits.push({row: position.row, col : position.col})
                         returnvalue = true;
                     }
@@ -43,6 +43,13 @@ class GameController {
             });
         });
         return returnvalue;
+    }
+    static CheckSunkenships(ships) {
+        let sunkStatuses = '';
+        ships.forEach(ship => {
+            sunkStatuses += `${ship.name}  : ${(ship.isSunk) ? 'This ship rests at the bottom of the sea' : 'Arrrrr, she is still afloat'}\n`
+        })
+        return sunkStatuses
     }
 
     static isShipValid(ship) {
