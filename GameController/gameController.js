@@ -1,4 +1,5 @@
 class GameController {
+    
     static InitializeShips() {
         var colors = require("cli-color");
         const Ship = require("./ship.js");
@@ -50,6 +51,11 @@ class GameController {
 
     static isShipValid(ship) {
         return ship.positions.length == ship.size;
+    }
+
+    static CheckGameOver(ships) {
+        const sunkenShipsLength = ships.filter( ship => ship.isSunk === true).length
+        return sunkenShipsLength === ships.length
     }
 }
 
