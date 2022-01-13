@@ -66,7 +66,7 @@ class Battleship {
             }
             else {
                 AsciiArt.PrintWater()
-                AsciiArt.Red(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                AsciiArt.PrintRed(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
             }
 
 
