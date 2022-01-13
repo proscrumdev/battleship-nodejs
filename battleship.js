@@ -7,7 +7,12 @@ const letters = require("./GameController/letters.js");
 const asciiArt = require("./asciiArt.js");
 const AsciiArt = require('./asciiArt.js');
 
+var maximum = 4;
+var minimum = 1;
+var randomNumberBasedOnRange = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 var remainingPositions = [];
+var userBoatPlacement = [];
+
 class Battleship {
 
     start() {
@@ -15,8 +20,11 @@ class Battleship {
         console.log();
 
         AsciiArt.PrintSetupHeader()
+
         this.InitializeGame();
+
         AsciiArt.PrintGameStartHeader()
+
         this.StartGame();
     }
 
@@ -74,6 +82,7 @@ class Battleship {
             const playerWin = gameController.CheckGameOver(this.enemyFleet);
             if(playerWin){
                 haveWinner = true
+                console.log('You have sunk all the enemy ships! Woot woot!')
             }
             
             if(!playerWin){
@@ -94,6 +103,7 @@ class Battleship {
                 let computerWin = gameController.CheckGameOver(this.myFleet);
                 
                 if(computerWin){
+                    console.log('You have lost all your ships to the enemy! You lose =(')
                     haveWinner = true
                 }
             }
@@ -130,7 +140,7 @@ class Battleship {
     InitializeGame() {
         this.InitializeBoard();
         this.InitializeMyFleet();
-        this.InitializeEnemyFleet();
+        this.InitializeEnemyFleet(randomNumberBasedOnRange);
     }
 
     convertNumberToLetter(value) {
@@ -185,29 +195,97 @@ class Battleship {
             for (var i = 1; i < ship.size + 1; i++) {
                 console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
                 const position = readline.question();
+
                 ship.addPosition(Battleship.ParsePosition(position));
             }
         })
     }
 
-    InitializeEnemyFleet() {
+    InitializeEnemyFleet(configNumber) {
+        if (configNumber == 1) {
+            this.InitializeEnemyFleet1();
+        } else if (configNumber == 2) {
+            this.InitializeEnemyFleet2();
+        } else if (configNumber == 3) {
+            this.InitializeEnemyFleet3();
+        } else if (configNumber == 4) {
+            this.InitializeEnemyFleet4();
+        }
+    }
+
+    InitializeEnemyFleet1() {
         this.enemyFleet = gameController.InitializeShips();
 
-        this.enemyFleet[0].addPosition(new position(letters.B, 4));
-        this.enemyFleet[0].addPosition(new position(letters.B, 5));
-        this.enemyFleet[0].addPosition(new position(letters.B, 6));
-        this.enemyFleet[0].addPosition(new position(letters.B, 7));
-        this.enemyFleet[0].addPosition(new position(letters.B, 8));
+        this.enemyFleet[0].addPosition(new position(letters.A, 4));
+        this.enemyFleet[0].addPosition(new position(letters.A, 5));
+        this.enemyFleet[0].addPosition(new position(letters.A, 6));
+        this.enemyFleet[0].addPosition(new position(letters.A, 7));
+        this.enemyFleet[0].addPosition(new position(letters.A, 8));
 
 
-        this.enemyFleet[1].addPosition(new position(letters.E, 6));
-        this.enemyFleet[1].addPosition(new position(letters.E, 7));
-        this.enemyFleet[1].addPosition(new position(letters.E, 8));
-        this.enemyFleet[1].addPosition(new position(letters.E, 9));
+        this.enemyFleet[1].addPosition(new position(letters.B, 5));
+        this.enemyFleet[1].addPosition(new position(letters.B, 6));
+        this.enemyFleet[1].addPosition(new position(letters.B, 7));
+        this.enemyFleet[1].addPosition(new position(letters.B, 8));
 
-        this.enemyFleet[2].addPosition(new position(letters.A, 3));
-        this.enemyFleet[2].addPosition(new position(letters.B, 3));
         this.enemyFleet[2].addPosition(new position(letters.C, 3));
+        this.enemyFleet[2].addPosition(new position(letters.C, 4));
+        this.enemyFleet[2].addPosition(new position(letters.C, 5));
+
+        this.enemyFleet[3].addPosition(new position(letters.F, 8));
+        this.enemyFleet[3].addPosition(new position(letters.F, 8));
+        this.enemyFleet[3].addPosition(new position(letters.F, 8));
+
+        this.enemyFleet[4].addPosition(new position(letters.G, 5));
+        this.enemyFleet[4].addPosition(new position(letters.G, 6));
+    }
+
+    InitializeEnemyFleet2() {
+        this.enemyFleet = gameController.InitializeShips();
+
+        this.enemyFleet[0].addPosition(new position(letters.E, 4));
+        this.enemyFleet[0].addPosition(new position(letters.E, 5));
+        this.enemyFleet[0].addPosition(new position(letters.E, 6));
+        this.enemyFleet[0].addPosition(new position(letters.E, 7));
+        this.enemyFleet[0].addPosition(new position(letters.E, 8));
+
+
+        this.enemyFleet[1].addPosition(new position(letters.B, 5));
+        this.enemyFleet[1].addPosition(new position(letters.B, 6));
+        this.enemyFleet[1].addPosition(new position(letters.B, 7));
+        this.enemyFleet[1].addPosition(new position(letters.B, 8));
+
+        this.enemyFleet[2].addPosition(new position(letters.F, 3));
+        this.enemyFleet[2].addPosition(new position(letters.G, 3));
+        this.enemyFleet[2].addPosition(new position(letters.H, 3));
+
+        this.enemyFleet[3].addPosition(new position(letters.E, 8));
+        this.enemyFleet[3].addPosition(new position(letters.F, 8));
+        this.enemyFleet[3].addPosition(new position(letters.G, 8));
+
+        this.enemyFleet[4].addPosition(new position(letters.D, 5));
+        this.enemyFleet[4].addPosition(new position(letters.D, 6));
+    }
+
+
+    InitializeEnemyFleet3() {
+        this.enemyFleet = gameController.InitializeShips();
+
+        this.enemyFleet[0].addPosition(new position(letters.A, 4));
+        this.enemyFleet[0].addPosition(new position(letters.B, 5));
+        this.enemyFleet[0].addPosition(new position(letters.C, 6));
+        this.enemyFleet[0].addPosition(new position(letters.D, 7));
+        this.enemyFleet[0].addPosition(new position(letters.E, 8));
+
+
+        this.enemyFleet[1].addPosition(new position(letters.A, 5));
+        this.enemyFleet[1].addPosition(new position(letters.A, 6));
+        this.enemyFleet[1].addPosition(new position(letters.A, 7));
+        this.enemyFleet[1].addPosition(new position(letters.A, 8));
+
+        this.enemyFleet[2].addPosition(new position(letters.C, 3));
+        this.enemyFleet[2].addPosition(new position(letters.D, 3));
+        this.enemyFleet[2].addPosition(new position(letters.E, 3));
 
         this.enemyFleet[3].addPosition(new position(letters.F, 8));
         this.enemyFleet[3].addPosition(new position(letters.G, 8));
@@ -215,6 +293,33 @@ class Battleship {
 
         this.enemyFleet[4].addPosition(new position(letters.C, 5));
         this.enemyFleet[4].addPosition(new position(letters.C, 6));
+    }
+
+    InitializeEnemyFleet4() {
+        this.enemyFleet = gameController.InitializeShips();
+
+        this.enemyFleet[0].addPosition(new position(letters.F, 4));
+        this.enemyFleet[0].addPosition(new position(letters.F, 5));
+        this.enemyFleet[0].addPosition(new position(letters.F, 6));
+        this.enemyFleet[0].addPosition(new position(letters.F, 7));
+        this.enemyFleet[0].addPosition(new position(letters.F, 8));
+
+
+        this.enemyFleet[1].addPosition(new position(letters.H, 5));
+        this.enemyFleet[1].addPosition(new position(letters.H, 6));
+        this.enemyFleet[1].addPosition(new position(letters.H, 7));
+        this.enemyFleet[1].addPosition(new position(letters.H, 8));
+
+        this.enemyFleet[2].addPosition(new position(letters.A, 6));
+        this.enemyFleet[2].addPosition(new position(letters.B, 7));
+        this.enemyFleet[2].addPosition(new position(letters.C, 8));
+
+        this.enemyFleet[3].addPosition(new position(letters.F, 1));
+        this.enemyFleet[3].addPosition(new position(letters.G, 2));
+        this.enemyFleet[3].addPosition(new position(letters.H, 3));
+
+        this.enemyFleet[4].addPosition(new position(letters.C, 1));
+        this.enemyFleet[4].addPosition(new position(letters.C, 2));
     }
 }
 
