@@ -21,11 +21,13 @@ class Battleship {
     }
 
     StartGame() {
+        let haveWinner = false;
         console.clear();
         asciiArt.PrintCanon();
 
         do {
             console.log();
+            
             AsciiArt.PrintCyanBright("Player, it's your turn");
             AsciiArt.PrintCyan("Enter coordinates for your shot :");
             this.renderRemainingPositions();
@@ -49,38 +51,39 @@ class Battleship {
                 AsciiArt.PrintWater()
                 AsciiArt.PrintRed("Miss");
             }
-
             //here we display sunken and remaining enemy ships?
             const statusCheck = gameController.CheckSunkenships(this.enemyFleet)
             console.log('==================================================')
             console.log(statusCheck)
             console.log('==================================================')
-            const playerWin = gameController.CheckGameOver(this.enemyFleet)
+
+            const playerWin = gameController.CheckGameOver(this.enemyFleet);
             if(playerWin){
-
+                haveWinner = true
             }
-            else{
+            if(!playerWin){
+                var computerPos = this.GetRandomPosition();
+                var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+                console.log();
+                AsciiArt.PrintBlueBright(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                if (isHit) {
+                    beep();
+                    AsciiArt.PrintHit()
+                    AsciiArt.Green(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                }
+                else {
+                    AsciiArt.PrintWater()
+                    AsciiArt.PrintRed(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                }
 
+                let computerWin = gameController.CheckGameOver(this.myFleet);
                 
+                if(computerWin){
+                    haveWinner = true
+                }
             }
-
-            var computerPos = this.GetRandomPosition();
-            var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
-            console.log();
-            AsciiArt.PrintBlueBright(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
-            if (isHit) {
-                beep();
-                AsciiArt.PrintHit()
-                AsciiArt.Green(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
-            }
-            else {
-                AsciiArt.PrintWater()
-                AsciiArt.PrintRed(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
-            }
-
-
         }
-        while (true);
+        while (!haveWinner);
     }
 
     renderRemainingPositions() {
