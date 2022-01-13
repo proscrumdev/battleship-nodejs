@@ -34,6 +34,13 @@ class AsciiArt {
         return console.log(cliColor.magenta(text))
     }
 
+    static PrintWithColor(color) {
+        if(!cliColor[color])
+            console.error('Color ', color, ' does not exist on cliColor.')
+        else
+            return function(text) { return console.log(cliColor[color](text)) }
+    }
+
     static PrintBattleship() {
         AsciiArt.PrintMagenta("                                     |__");
         AsciiArt.PrintMagenta("                                     |\\/");
@@ -84,6 +91,91 @@ class AsciiArt {
         AsciiArt.PrintBlue("              _/\_/\_/\_/\_/\_/\_/\_/\_")
         AsciiArt.PrintBlue("         _/\_/\_/\_/\_/\_/\_/\_/\_     ")
     }
+
+
+    static PrintBoat(boatName) {
+        var boatExecutorsByBoatName = {
+            'Aircraft Carrier': function() {
+                const printItem = AsciiArt.PrintWithColor('cyan')
+
+                printItem("                |")
+                printItem("                -+-")
+                printItem("              ---#---")
+                printItem("              __|_|__            __")
+                printItem("              \_____/           ||\________")
+                printItem("__   __   __  \_____/            ^---------^")
+                printItem("||\__||\__||\__|___  | '-O-`")
+                printItem("-^---------^--^----^___.-------------.___.--------.___.------")
+                printItem("`-------------|-------------------------------|-------------'")
+                printItem("      \___      |     \    o O o    /     |      ___/")
+                printItem("          \____/        \         /        \____/")
+                printItem("              |           \     /           |")
+                printItem("              |             \|/             |")
+                printItem("              |              |              |")
+                printItem("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            },
+            'Battleship': function() {
+                const printItem = AsciiArt.PrintWithColor('cyan')
+
+                printItem("                                 |__")
+                printItem("                                 |\/")
+                printItem("                                 ---")
+                printItem("                                 / | [")
+                printItem("                             !      | |||")
+                printItem("                          _/|     _/|-++'")
+            printItem("                         +  +--|    |--|--|_ |-")
+                printItem("                     { /|__|  |/\__|  |--- |||__/")
+                printItem("                +---------------___[}-_===_.'____                 /\\")
+                printItem("               ____`-' ||___-{]_| _[}-  |     |_[___\==--            \/   _")
+                printItem("__..._____--==/___]_|__|_____________________________[___\==--____,------' .7")
+                printItem("|                                                                     BB-61/")
+                printItem("\_________________________________________________________________________|")
+            },
+            'Submarine': function() {
+                const printItem = AsciiArt.PrintWithColor('cyan')
+
+                printItem("                ?")
+                printItem("                ~~~~~~~~~~~~~~~~~~~~~~~~~~~|^~~~~~~~~~~~~~~~~~~~~~~~~~o~~~~~~~~~~~")
+                printItem("                       o                   |                  o      __o")
+                printItem("                        o                  |                 o     |X__>")
+                printItem("                      ___o                 |                __o")
+                printItem("                    (X___>--             __|__            |X__>     o")
+                printItem("                                        |     \                   __o")
+                printItem("                                        |      \                |X__>")
+                printItem("                 _______________________|_______\________________")
+                printItem("                <                                                \____________   _")
+                printItem("                 \                                                            \ (_)")
+                printItem("                  \    O       O       O                                       >=)")
+                printItem("                   \__________________________________________________________/ (_)")
+            },
+            'Destroyer': function() {
+                const printItem = AsciiArt.PrintWithColor('yellow')
+
+                printItem("                     __/___            ")
+                printItem("              _____/______|           ")
+                printItem("      _______/_____\_______\_____     ")
+                printItem("      \              < < <       |    ")
+                printItem("       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            },
+            'Patrol Boat': function() {
+                const printItem = AsciiArt.PrintWithColor('cyan')
+
+                printItem("                o . o o.o")
+                printItem("                     ...oo")
+                printItem("                       __[]__")
+                printItem("                    __|_o_o_o\__")
+                printItem("                    \''''''''''/")
+                printItem("                     \. ..  . /")
+                printItem("                ^^^^^^^^^^^^^^^^^^^^")
+            },
+        }
+
+        var boat = boatExecutorsByBoatName[boatName]
+
+        if(boat)
+            boat()
+    }
+
 
     static PrintSetupHeader() {
         AsciiArt.PrintYellow("-------------------------------------------------------------------------------------------------------------------");
