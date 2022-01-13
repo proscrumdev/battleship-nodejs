@@ -87,6 +87,7 @@ class Battleship {
         return new position(letter, number);
     }
 
+
     GetRandomPosition() {
         var rows = 8;
         var lines = 8;
