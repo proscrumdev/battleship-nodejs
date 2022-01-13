@@ -6,8 +6,10 @@ const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
 const asciiArt = require("./asciiArt.js");
 const AsciiArt = require('./asciiArt.js');
+const Position = require('./GameController/position.js');
 
 var remainingPositions = [];
+var remainingEnemyShotOptions = []
 class Battleship {
 
     start() {
@@ -33,6 +35,7 @@ class Battleship {
             var position = Battleship.ParsePosition(readline.question());
             remainingPositions = remainingPositions.filter((v) => {
                 if (position) {
+                    console.log(position)
                     const pos = this.convertNumberToLetter(position.column.value) + position.row;
                     return v !== pos;
                 }
@@ -55,7 +58,7 @@ class Battleship {
             console.log('==================================================')
             console.log(statusCheck)
             console.log('==================================================')
-            var computerPos = this.GetRandomPosition();
+            var computerPos = this.GetRandomEnemyShot();
             var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
             console.log();
             AsciiArt.PrintBlueBright(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
@@ -90,20 +93,40 @@ class Battleship {
     }
 
 
-    GetRandomPosition() {
+    GetRandomEnemyShot() {
+
+        let shotOption = this.GetRandomPosition()
+
+        let resultIsRemainingEnemyShotOption = remainingEnemyShotOptions.some(
+            (option) => option.column === shotOption.column && option.row === shotOption.row
+        )
+
+        while(!resultIsRemainingEnemyShotOption){
+            result = new position(letter, number);
+            resultIsRemainingEnemyShotOption = remainingEnemyShotOptions.find(
+                (option) => option.column === shotOption.column && option.row === shotOption.row
+            )
+        }
+
+        return result;
+    }
+
+    GetRandomPosition(){
         var rows = 8;
         var lines = 8;
         var rndColumn = Math.floor((Math.random() * lines));
         var letter = letters.get(rndColumn + 1);
         var number = Math.floor((Math.random() * rows));
-        var result = new position(letter, number);
-        return result;
+
+        let result = new position(letter, number);
+        result
     }
 
     InitializeGame() {
         this.InitializeBoard();
         this.InitializeMyFleet();
         this.InitializeEnemyFleet();
+        this.InitializeEnemyShotOptions();
     }
 
     convertNumberToLetter(value) {
@@ -185,6 +208,13 @@ class Battleship {
 
         this.enemyFleet[4].addPosition(new position(letters.C, 5));
         this.enemyFleet[4].addPosition(new position(letters.C, 6));
+    }
+
+    InitializeEnemyShotOptions() {
+       const rows = [1,2,3,4,5,6,7,8]
+       const columns = [1,2,3,4,5,6,7,8]
+       remainingEnemyShotOptions = rows.map((row) => columns.map(column => new position(column, row)))
+
     }
 }
 
