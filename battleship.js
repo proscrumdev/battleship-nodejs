@@ -61,6 +61,7 @@ class Battleship {
             if(playerWin){
                 haveWinner = true
             }
+            
             if(!playerWin){
                 var computerPos = this.GetRandomPosition();
                 var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
