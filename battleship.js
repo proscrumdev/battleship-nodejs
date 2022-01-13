@@ -50,6 +50,11 @@ class Battleship {
                 AsciiArt.PrintRed("Miss");
             }
 
+            //here we display sunken and remaining enemy ships?
+            const statusCheck = gameController.CheckSunkenships(this.enemyFleet)
+            console.log('==================================================')
+            console.log(statusCheck)
+            console.log('==================================================')
             var computerPos = this.GetRandomPosition();
             var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
             console.log();
@@ -63,6 +68,8 @@ class Battleship {
                 AsciiArt.PrintWater()
                 AsciiArt.Red(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
             }
+
+
         }
         while (true);
     }
@@ -81,6 +88,7 @@ class Battleship {
         var number = parseInt(input.substring(1, 2), 10);
         return new position(letter, number);
     }
+
 
     GetRandomPosition() {
         var rows = 8;
