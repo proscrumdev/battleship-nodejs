@@ -51,6 +51,11 @@ class GameController {
     static isShipValid(ship) {
         return ship.positions.length == ship.size;
     }
+
+    static CheckGameOver(ships) {
+        const sunkenShipsLength = ships.filter( ship => ship.isSunk === true).length
+        return sunkenShipsLength === ships.length
+    }
 }
 
 module.exports = GameController;

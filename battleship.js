@@ -29,11 +29,13 @@ class Battleship {
     }
 
     StartGame() {
+        let haveWinner = false;
         console.clear();
         asciiArt.PrintCanon();
 
         do {
             console.log();
+            
             AsciiArt.PrintCyanBright("Player, it's your turn");
             AsciiArt.PrintCyan("Enter coordinates for your shot :");
             this.renderRemainingPositions();
@@ -48,6 +50,7 @@ class Battleship {
             });
 
             var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+
             if (isHit) {
                 beep();
                 AsciiArt.PrintHit()
@@ -57,7 +60,6 @@ class Battleship {
                 AsciiArt.PrintWater()
                 AsciiArt.PrintRed("Miss");
             }
-
             //here we display sunken and remaining enemy ships?
             const statusCheck = gameController.CheckSunkenships(this.enemyFleet)
             console.log('==================================================')
@@ -65,8 +67,8 @@ class Battleship {
             console.log('==================================================')
             var computerPos = this.GetRandomPosition();
             var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+
             console.log();
-            AsciiArt.PrintBlueBright(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
             if (isHit) {
                 beep();
                 AsciiArt.PrintHit()
@@ -77,9 +79,34 @@ class Battleship {
                 AsciiArt.PrintRed(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
             }
 
+            const playerWin = gameController.CheckGameOver(this.enemyFleet);
+            if(playerWin){
+                haveWinner = true
+            }
+            
+            if(!playerWin){
+                var computerPos = this.GetRandomPosition();
+                var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+                console.log();
+                AsciiArt.PrintBlueBright(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                if (isHit) {
+                    beep();
+                    AsciiArt.PrintHit()
+                    AsciiArt.Green(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                }
+                else {
+                    AsciiArt.PrintWater()
+                    AsciiArt.PrintRed(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                }
 
+                let computerWin = gameController.CheckGameOver(this.myFleet);
+                
+                if(computerWin){
+                    haveWinner = true
+                }
+            }
         }
-        while (true);
+        while (!haveWinner);
     }
 
     renderRemainingPositions() {
@@ -160,6 +187,9 @@ class Battleship {
         this.myFleet.forEach(function (ship) {
             console.log();
             console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
+
+            AsciiArt.PrintBoat(ship.name)
+
             for (var i = 1; i < ship.size + 1; i++) {
                 console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
                 const position = readline.question();
