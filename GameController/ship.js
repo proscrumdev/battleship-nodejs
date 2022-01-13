@@ -4,6 +4,8 @@ class Ship {
         this.size = size;
         this.color = color;
         this.positions = [];
+        this.hits = [];
+        this.isSunk = false;
     }
 
     addPosition(position) {
