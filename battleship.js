@@ -55,6 +55,15 @@ class Battleship {
             console.log('==================================================')
             console.log(statusCheck)
             console.log('==================================================')
+            const playerWin = gameController.CheckGameOver(this.enemyFleet)
+            if(playerWin){
+
+            }
+            else{
+
+                
+            }
+
             var computerPos = this.GetRandomPosition();
             var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
             console.log();
