@@ -5,6 +5,7 @@ const beep = require('beepbeep');
 const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
 
+var remainingPositions = [];
 class Battleship {
 
     start() {
@@ -22,6 +23,7 @@ class Battleship {
         console.log(cliColor.magenta("|                        Welcome to Battleship                         BB-61/"));
         console.log(cliColor.magenta(" \\_________________________________________________________________________|"));
         console.log();
+
 
         this.InitializeGame();
         this.StartGame();
@@ -41,10 +43,19 @@ class Battleship {
         console.log("    \"\"\"\"");
 
         do {
-            console.log();
+            this.renderRemainingPositions();
             console.log("Player, it's your turn");
             console.log("Enter coordinates for your shot :");
+
             var position = Battleship.ParsePosition(readline.question());
+            remainingPositions = remainingPositions.filter((v) => {
+                if (position) {
+                    const pos = this.convertNumberToLetter(position.column.value) + position.row;
+                    return v !== pos;
+                }
+                return true;
+            });
+
             var isHit = gameController.CheckIsHit(this.enemyFleet, position);
             if (isHit) {
                 beep();
@@ -81,6 +92,15 @@ class Battleship {
         while (true);
     }
 
+    renderRemainingPositions() {
+        console.log("Remaining positions left :");
+        var messageToDisplay = '';
+        remainingPositions.forEach((position) => {
+            messageToDisplay += position + ';';
+        });
+        console.log(messageToDisplay);
+    }
+
     static ParsePosition(input) {
         var letter = letters.get(input.toUpperCase().substring(0, 1));
         var number = parseInt(input.substring(1, 2), 10);
@@ -98,8 +118,47 @@ class Battleship {
     }
 
     InitializeGame() {
+        this.InitializeBoard();
         this.InitializeMyFleet();
         this.InitializeEnemyFleet();
+    }
+
+    convertNumberToLetter(value) {
+        if (value === 1) {
+            return "A"
+        }
+        if (value === 2) {
+            return "B"
+        }
+        if (value === 3) {
+            return "C"
+        }
+        if (value === 4) {
+            return "D"
+        }
+        if (value === 5) {
+            return "E"
+        }
+        if (value === 6) {
+            return "F"
+        }
+        if (value === 7) {
+            return "G"
+        }
+        if (value === 8) {
+            return "H"
+        }
+    }
+
+    InitializeBoard() {
+        // letters
+        for (let letter = 1; letter <= 8; letter++) {
+            // numbers
+            for (let number = 1; number <= 8; number++) {
+                const position = this.convertNumberToLetter(letter) + number
+                remainingPositions.push(position)
+            }
+        }
     }
 
     InitializeMyFleet() {
@@ -126,6 +185,7 @@ class Battleship {
         this.enemyFleet[0].addPosition(new position(letters.B, 6));
         this.enemyFleet[0].addPosition(new position(letters.B, 7));
         this.enemyFleet[0].addPosition(new position(letters.B, 8));
+
 
         this.enemyFleet[1].addPosition(new position(letters.E, 6));
         this.enemyFleet[1].addPosition(new position(letters.E, 7));
