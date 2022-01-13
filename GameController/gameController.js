@@ -36,7 +36,6 @@ class GameController {
                         ship.isSunk = true
                     }
                 }
-                   
             });
         });
         return returnvalue;
