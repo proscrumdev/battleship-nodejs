@@ -1,13 +1,13 @@
 class GameControllerHelpers {
-    
-    static validInput = (input) =>{
+
+    static validInput(input){
         const userInput = input.trim();
         //should find a better way to regex based on grid size
         const positionRegex = /[a-hA-H]{1}[1-9]{1}/;
         const positionMatch = positionRegex.exec(userInput);
         return positionMatch;
     }
-    static checkShipAllignment = (shipPositions, currentPosition, remaining, size) => {
+    static checkShipAllignment(shipPositions, currentPosition, remaining, size){
         let validPositioning = false;
         let lastPosition = shipPositions[shipPositions.length - 1];
         let currentColumn = currentPosition.toUpperCase().substring(0, 1);
