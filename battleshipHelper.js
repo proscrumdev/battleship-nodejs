@@ -1,3 +1,5 @@
+const gameController = require("./GameController/gameController.js")
+
 class BattleshipHelper {
 
     static GetNumberForLetter(letter) {
@@ -40,6 +42,15 @@ class BattleshipHelper {
         }
 
         return lettersByNumber[number]
+    }
+
+    static PrintStatus(fleet) {
+        //here we display sunken and remaining enemy ships?
+        const statusCheck = gameController.CheckSunkenships(fleet)
+        console.log('==================================================')
+        console.log(statusCheck)
+        console.log('==================================================')
+        console.log()
     }
 
 }
