@@ -19,6 +19,8 @@ class GameController {
             ships.push(additionalShip)
         }
 
+        console.log('INITIALIZING SHIPS ', ships)
+
         return ships;
     }
 
