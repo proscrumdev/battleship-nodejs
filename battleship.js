@@ -16,26 +16,23 @@ var randomNumberBasedOnRange = Math.floor(Math.random() * (maximum - minimum + 1
 var remainingPositions = [];
 var gridShowingGuessesToHitEnemy = []
 var gridShowingGuessesToHitUser = []
+var currentLevel = 1
 
 class Battleship {
 
     start() {
         AsciiArt.PrintBattleship()
         console.log();
-
         AsciiArt.PrintSetupHeader()
-
-        this.InitializeGame();
-
-        AsciiArt.PrintGameStartHeader()
-
+        this.InitializeGame()
         this.StartGame();
     }
 
     StartGame() {
         let haveWinner = false;
-        console.clear();
-        asciiArt.PrintCanon();
+        console.clear()
+        AsciiArt.PrintGameStartHeader(currentLevel)
+        AsciiArt.PrintCanon();
 
         do {
             console.log();
@@ -112,6 +109,13 @@ class Battleship {
             }
         }
         while (!haveWinner);
+
+        currentLevel +=1
+
+        if(currentLevel < 4) {
+            this.InitializeGame()
+            this.StartGame()
+        }
     }
 
     renderRemainingPositions() {
@@ -164,7 +168,7 @@ class Battleship {
     }
 
     InitializeMyFleet() {
-        this.myFleet = gameController.InitializeShips();
+        this.myFleet = gameController.InitializeShips(1);
 
         console.log("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
@@ -185,13 +189,13 @@ class Battleship {
 
     InitializeEnemyFleet(configNumber) {
         if (configNumber == 1) {
-            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet1();
+            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet1(currentLevel);
         } else if (configNumber == 2) {
-            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet2();
+            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet2(currentLevel);
         } else if (configNumber == 3) {
-            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet3();
+            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet3(currentLevel);
         } else if (configNumber == 4) {
-            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet4();
+            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet4(currentLevel);
         }
     }
 }

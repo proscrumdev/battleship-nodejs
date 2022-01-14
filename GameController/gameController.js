@@ -1,7 +1,9 @@
 class GameController {
-    static InitializeShips() {
+    static InitializeShips(currentLevel = 1) {
         var colors = require("cli-color");
         const Ship = require("./ship.js");
+        const extraShipsToAdd = currentLevel - 1
+
         var ships = [
             new Ship("Aircraft Carrier", 5, colors.CadetBlue),
             new Ship("Battleship", 4, colors.Red),
@@ -9,6 +11,12 @@ class GameController {
             new Ship("Destroyer", 3, colors.Yellow),
             new Ship("Patrol Boat", 2, colors.Orange)
         ];
+
+        for(var i=0; i<extraShipsToAdd.length; i++) {
+            const additionalShip = new Ship("Patrol Boat", 2, colors.Orange)
+            ships.push(additionalShip)
+        }
+
         return ships;
     }
 

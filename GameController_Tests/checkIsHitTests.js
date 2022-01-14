@@ -6,7 +6,7 @@ const position = require("../GameController/position.js")
 describe('checkIsHitTests', function () {
 
   it('should return true if there is a ship at the shooting position', function () {
-    var ships = gameController.InitializeShips();
+    var ships = gameController.InitializeShips(1);
     counter = 1;
     ships.forEach(ship => {
       for (var i = 1; i <= ship.size; i++) {
@@ -20,7 +20,7 @@ describe('checkIsHitTests', function () {
   });
 
   it('should return false if there is no ship at the shooting position', function () {
-    var ships = gameController.InitializeShips();
+    var ships = gameController.InitializeShips(1);
     counter = 1;
     ships.forEach(ship => {
       for (var i = 1; i <= ship.size; i++) {
@@ -33,7 +33,7 @@ describe('checkIsHitTests', function () {
   });
 
   it('should throw an exception if positstion is undefined', function () {
-    var ships = gameController.InitializeShips();
+    var ships = gameController.InitializeShips(1);
     assert.throws(
       () => {
         var actual = gameController.CheckIsHit(ships, undefined);
