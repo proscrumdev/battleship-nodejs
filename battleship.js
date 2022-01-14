@@ -166,9 +166,7 @@ class Battleship {
     InitializeGame() {
         this.InitializeBoard();
         this.InitializeGrid();
-        console.log('Initialize my fleet')
         this.InitializeMyFleet();
-        console.log('Initialize enemy fleet')
         this.InitializeEnemyFleet(1);
     }
 
@@ -190,8 +188,6 @@ class Battleship {
 
     InitializeMyFleet() {
         this.myFleet = gameController.InitializeShips(1);
-
-        console.log('My fleet ', this.myFleet)
 
         console.log("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
