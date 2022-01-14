@@ -1,3 +1,5 @@
+import GameControllerHelpers, { validInput, checkShipAllignment } from "./gameControllerHelper.js";
+
 class GameController {
     
     static InitializeShips() {
@@ -61,64 +63,18 @@ class GameController {
     static CheckValidShipPosition(ship, position, entryNum) {
         let isValid = false;
         const userInput = position.trim();
-        const positionMatch = validInput(position);
+        const positionMatch = GameControllerHelpers.validInput(position);
 
         if(positionMatch && position.length === 2 && !ship.getpositions.includes(userInput.toUpperCase())) {
             const remainingSlots = ship.size - entryNum;
             isValid = true;
             if(remainingSlots < ship.size-1 ){
-                const validAlignment = checkShipAllignment(ship.positions, userInput, remainingSlots, ship.size);
+                const validAlignment = GameControllerHelpers.checkShipAllignment(ship.positions, userInput, remainingSlots, ship.size);
                 isValid = validAlignment;
             }
         }
         return isValid;
     } 
-
-    static GenerateBoard(size){
-        if(26 >= size > 0){
-            const alphabet = alphabetArray(size)
-            const numbers = Array.from({length:size}, (_,k) => k + 1 )
-            const matrixArray =  alphabet.map( letter => { return numbers.map(num => `${letter}${num}`)})
-            return matrixArray
-        }
-        else{
-            return 'Board size cannot be greater than 26';
-        }
-    }
 }
-//Helpers
-const alphabetArray = (size) =>{
-    return alphabet = (26 >= size > 0) ? [...Array(size)].map(_=>(++i).toString(36).toUpperCase(),i=9) : [];
-}
-const validInput = (input) =>{
-    const userInput = input.trim();
-    //should find a better way to regex based on grid size
-    const positionRegex = /[a-hA-H]{1}[1-9]{1}/;
-    const positionMatch = positionRegex.exec(userInput);
-    return positionMatch;
-}
-const checkShipAllignment = (shipPositions, currentPosition, remaining, size) => {
-    let validPositioning = false;
-    let lastPosition = shipPositions[shipPositions.length - 1];
-    let currentColumn = currentPosition.toUpperCase().substring(0, 1);
-    let currentRow = parseInt(currentPosition.substring(1, 2), 10);
-
-    if( (size - (remaining + 2 )) === 0){
-        const lastRow = lastPosition.row;
-        const lastColumn = lastPosition.column.key;
-        //only checks if the ship alignment is in one direction (vertical/horizontal)
-        validPositioning = (lastRow === currentRow || lastColumn === currentColumn) ? true : false;
-        //need to check for distance value of row or col (since we dont want gaps between positions)
-    }
-    else{
-        const shipVertical = shipPositions.filter( pos => pos.column.key === shipPositions[0].column.key);
-        const shipHorizontall = shipPositions.filter( pos => pos.row === shipPositions[0].row);
-        validPositioning = (shipVertical.length > shipHorizontall.length) 
-                            ? currentColumn === lastPosition.column.key 
-                            : currentRow === lastPosition.row ;
-    }   
-    return validPositioning;
-  }
-
 
 module.exports = GameController;
