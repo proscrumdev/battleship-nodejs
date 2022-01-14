@@ -6,72 +6,116 @@ const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
 const asciiArt = require("./asciiArt.js");
 const AsciiArt = require('./asciiArt.js');
+const BattleshipHelper = require('./battleshipHelper.js')
+const EnemyFleetHelper = require('./enemyFleetHelper.js')
+const GridHelper = require('./gridHelper.js')
 
+var maximum = 4;
+var minimum = 1;
+var randomNumberBasedOnRange = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
 var remainingPositions = [];
+var gridShowingGuessesToHitEnemy = []
+var gridShowingGuessesToHitUser = []
+var currentLevel = 1
+
 class Battleship {
 
     start() {
         AsciiArt.PrintBattleship()
         console.log();
-
         AsciiArt.PrintSetupHeader()
-        this.InitializeGame();
-        AsciiArt.PrintGameStartHeader()
+        this.InitializeGame()
         this.StartGame();
     }
 
     StartGame() {
-        console.clear();
-        asciiArt.PrintCanon();
+        let haveWinner = false;
+        console.clear()
+        AsciiArt.PrintGameStartHeader(currentLevel)
+        AsciiArt.PrintCanon();
 
         do {
             console.log();
+            
             AsciiArt.PrintCyanBright("Player, it's your turn");
             AsciiArt.PrintCyan("Enter coordinates for your shot :");
+            GridHelper.PrintGrid(gridShowingGuessesToHitEnemy, 'Enemy')
+            GridHelper.PrintGrid(gridShowingGuessesToHitUser, 'You')
             this.renderRemainingPositions();
 
             var position = Battleship.ParsePosition(readline.question());
+            var userInputXPosition = position.column.value
+            var userInputYPosition = position.row
+
             remainingPositions = remainingPositions.filter((v) => {
                 if (position) {
-                    const pos = this.convertNumberToLetter(position.column.value) + position.row;
+                    const pos = BattleshipHelper.GetLetterForNumber(userInputXPosition) + userInputYPosition;
                     return v !== pos;
                 }
                 return true;
             });
 
             var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+
             if (isHit) {
                 beep();
                 AsciiArt.PrintHit()
                 AsciiArt.PrintGreen("Yeah ! Nice hit !");
+                GridHelper.SetGridCellAsHit(gridShowingGuessesToHitEnemy, userInputXPosition, userInputYPosition)
             }
             else {
                 AsciiArt.PrintWater()
-                AsciiArt.PrintRed("Miss");
+                AsciiArt.PrintRed("Miss")
+                GridHelper.SetGridCellAsMissed(gridShowingGuessesToHitEnemy, userInputXPosition, userInputYPosition)
             }
 
-            //here we display sunken and remaining enemy ships?
-            const statusCheck = gameController.CheckSunkenships(this.enemyFleet)
-            console.log('==================================================')
-            console.log(statusCheck)
-            console.log('==================================================')
+            BattleshipHelper.PrintStatus(this.enemyFleet)
+
             var computerPos = this.GetRandomPosition();
             var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
-            console.log();
-            AsciiArt.PrintBlueBright(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
-            if (isHit) {
-                beep();
-                AsciiArt.PrintHit()
-                AsciiArt.Green(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
-            }
-            else {
-                AsciiArt.PrintWater()
-                AsciiArt.PrintRed(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
-            }
 
+            const playerWin = gameController.CheckGameOver(this.enemyFleet);
+            if(playerWin){
+                haveWinner = true
+                console.log('You have sunk all the enemy ships! Woot woot!')
+            }
+            
+            if(!playerWin){
+                var computerPos = this.GetRandomPosition();
+                var computerInputXPosition = computerPos.column.value
+                var computerInputYPosition = computerPos.row
+                var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
 
+                console.log();
+                AsciiArt.PrintBlueBright(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                if (isHit) {
+                    beep();
+                    AsciiArt.PrintHit()
+                    AsciiArt.Green(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                    GridHelper.SetGridCellAsHit(gridShowingGuessesToHitUser, computerInputXPosition, computerInputYPosition)
+                }
+                else {
+                    AsciiArt.PrintWater()
+                    AsciiArt.PrintRed(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                    GridHelper.SetGridCellAsMissed(gridShowingGuessesToHitUser, computerInputXPosition, computerInputYPosition)
+                }
+
+                let computerWin = gameController.CheckGameOver(this.myFleet);
+                
+                if(computerWin){
+                    console.log('You have lost all your ships to the enemy! You lose =(')
+                    haveWinner = true
+                }
+            }
         }
-        while (true);
+        while (!haveWinner);
+
+        currentLevel +=1
+
+        if(currentLevel < 4) {
+            this.InitializeGame()
+            this.StartGame()
+        }
     }
 
     renderRemainingPositions() {
@@ -90,47 +134,40 @@ class Battleship {
     }
 
 
-    GetRandomPosition() {
+    GetRandomEnemyShot() {
+
+        let shotOption = this.GetRandomPosition()
+
+        let resultIsRemainingEnemyShotOption = remainingEnemyShotOptions.some(
+            (option) => option.column === shotOption.column && option.row === shotOption.row
+        )
+
+        while(!resultIsRemainingEnemyShotOption){
+            result = new position(letter, number);
+            resultIsRemainingEnemyShotOption = remainingEnemyShotOptions.find(
+                (option) => option.column === shotOption.column && option.row === shotOption.row
+            )
+        }
+
+        return result;
+    }
+
+    GetRandomPosition(){
         var rows = 8;
         var lines = 8;
         var rndColumn = Math.floor((Math.random() * lines));
         var letter = letters.get(rndColumn + 1);
         var number = Math.floor((Math.random() * rows));
-        var result = new position(letter, number);
-        return result;
+
+        let result = new position(letter, number);
+        result
     }
 
     InitializeGame() {
         this.InitializeBoard();
+        this.InitializeGrid();
         this.InitializeMyFleet();
         this.InitializeEnemyFleet();
-    }
-
-    convertNumberToLetter(value) {
-        if (value === 1) {
-            return "A"
-        }
-        if (value === 2) {
-            return "B"
-        }
-        if (value === 3) {
-            return "C"
-        }
-        if (value === 4) {
-            return "D"
-        }
-        if (value === 5) {
-            return "E"
-        }
-        if (value === 6) {
-            return "F"
-        }
-        if (value === 7) {
-            return "G"
-        }
-        if (value === 8) {
-            return "H"
-        }
     }
 
     InitializeBoard() {
@@ -138,53 +175,52 @@ class Battleship {
         for (let letter = 1; letter <= 8; letter++) {
             // numbers
             for (let number = 1; number <= 8; number++) {
-                const position = this.convertNumberToLetter(letter) + number
+                const position = BattleshipHelper.GetLetterForNumber(letter) + number
                 remainingPositions.push(position)
             }
         }
     }
 
+    InitializeGrid() {
+        gridShowingGuessesToHitEnemy = GridHelper.GetInitialGrid()
+        gridShowingGuessesToHitUser = GridHelper.GetInitialGrid()
+    }
+
     InitializeMyFleet() {
-        this.myFleet = gameController.InitializeShips();
+        this.myFleet = gameController.InitializeShips(1);
 
         console.log("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
-        this.myFleet.forEach(function (ship) {
-            console.log();
-            console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
+        this.myFleet.forEach( function (ship) {
+            console.log(`\nPlease enter the positions for the ${ship.name} (size: ${ship.size})`);
+
+            AsciiArt.PrintBoat(ship.name)
+            
             for (var i = 1; i < ship.size + 1; i++) {
-                console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
-                const position = readline.question();
+                let validPosition = false
+                let position;
+                do{
+                    console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
+                    position = readline.question();
+                    validPosition = gameController.CheckValidShipPosition(ship, position, i)
+                    if(!validPosition) console.log('Invalid entry: \n - First character must be a letter from A-H \n - The second character an intger from 1-9\n - Adjacent to your last entry \n - Not an existing entry\n')
+                }
+                while(!validPosition)
                 ship.addPosition(Battleship.ParsePosition(position));
             }
         })
     }
 
-    InitializeEnemyFleet() {
-        this.enemyFleet = gameController.InitializeShips();
-
-        this.enemyFleet[0].addPosition(new position(letters.B, 4));
-        this.enemyFleet[0].addPosition(new position(letters.B, 5));
-        this.enemyFleet[0].addPosition(new position(letters.B, 6));
-        this.enemyFleet[0].addPosition(new position(letters.B, 7));
-        this.enemyFleet[0].addPosition(new position(letters.B, 8));
-
-
-        this.enemyFleet[1].addPosition(new position(letters.E, 6));
-        this.enemyFleet[1].addPosition(new position(letters.E, 7));
-        this.enemyFleet[1].addPosition(new position(letters.E, 8));
-        this.enemyFleet[1].addPosition(new position(letters.E, 9));
-
-        this.enemyFleet[2].addPosition(new position(letters.A, 3));
-        this.enemyFleet[2].addPosition(new position(letters.B, 3));
-        this.enemyFleet[2].addPosition(new position(letters.C, 3));
-
-        this.enemyFleet[3].addPosition(new position(letters.F, 8));
-        this.enemyFleet[3].addPosition(new position(letters.G, 8));
-        this.enemyFleet[3].addPosition(new position(letters.H, 8));
-
-        this.enemyFleet[4].addPosition(new position(letters.C, 5));
-        this.enemyFleet[4].addPosition(new position(letters.C, 6));
+    InitializeEnemyFleet(configNumber) {
+        if (configNumber == 1) {
+            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet1(currentLevel);
+        } else if (configNumber == 2) {
+            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet2(currentLevel);
+        } else if (configNumber == 3) {
+            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet3(currentLevel);
+        } else if (configNumber == 4) {
+            this.enemyFleet = EnemyFleetHelper.GetEnemyFleet4(currentLevel);
+        }
     }
 }
 

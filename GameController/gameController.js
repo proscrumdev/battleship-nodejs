@@ -1,7 +1,11 @@
+const GameControllerHelpers = require('./gameControllerHelper.js')
+
 class GameController {
-    static InitializeShips() {
+    static InitializeShips(currentLevel = 1) {
         var colors = require("cli-color");
         const Ship = require("./ship.js");
+        const extraShipsToAdd = currentLevel - 1
+
         var ships = [
             new Ship("Aircraft Carrier", 5, colors.CadetBlue),
             new Ship("Battleship", 4, colors.Red),
@@ -9,6 +13,12 @@ class GameController {
             new Ship("Destroyer", 3, colors.Yellow),
             new Ship("Patrol Boat", 2, colors.Orange)
         ];
+
+        for(var i=0; i<extraShipsToAdd.length; i++) {
+            const additionalShip = new Ship("Patrol Boat", 2, colors.Orange)
+            ships.push(additionalShip)
+        }
+
         return ships;
     }
 
@@ -51,6 +61,27 @@ class GameController {
     static isShipValid(ship) {
         return ship.positions.length == ship.size;
     }
+
+    static CheckGameOver(ships) {
+        const sunkenShipsLength = ships.filter( ship => ship.isSunk === true).length
+        return sunkenShipsLength === ships.length
+    }
+    
+    static CheckValidShipPosition(ship, position, entryNum) {
+        let isValid = false;
+        const userInput = position.trim();
+        const positionMatch = GameControllerHelpers.validInput(position);
+
+        if(positionMatch && position.length === 2 && !ship.getpositions.includes(userInput.toUpperCase())) {
+            const remainingSlots = ship.size - entryNum;
+            isValid = true;
+            if(remainingSlots < ship.size-1 ){
+                const validAlignment = GameControllerHelpers.checkShipAllignment(ship.positions, userInput, remainingSlots, ship.size);
+                isValid = validAlignment;
+            }
+        }
+        return isValid;
+    } 
 }
 
 module.exports = GameController;
