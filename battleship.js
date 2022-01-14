@@ -168,7 +168,6 @@ class Battleship {
         this.InitializeGrid();
         this.InitializeMyFleet();
         this.InitializeEnemyFleet();
-        this.InitializeEnemyShotOptions();
     }
 
     InitializeBoard() {
