@@ -205,7 +205,6 @@ class Battleship {
             }
         })
 
-        console.log('DOne adding my fleet')
         // this.myFleet.forEach( function (ship) {
         //     console.log(`\nPlease enter the positions for the ${ship.name} (size: ${ship.size})`);
 
