@@ -91,7 +91,7 @@ class Battleship {
                 if (isHit) {
                     beep();
                     AsciiArt.PrintHit()
-                    AsciiArt.Green(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
+                    AsciiArt.PrintGreen(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`))
                     GridHelper.SetGridCellAsHit(gridShowingGuessesToHitUser, computerInputXPosition, computerInputYPosition)
                 }
                 else {
