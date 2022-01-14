@@ -8,9 +8,14 @@ class Ship {
         this.isSunk = false;
     }
 
+    get getpositions(){
+        return this.positions.map( pos => { return  `${pos.column.key}${pos.row}` })
+    }
+    
     addPosition(position) {
         this.positions.push(position);
     }
+
 }
 
 module.exports = Ship;
