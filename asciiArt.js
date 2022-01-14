@@ -82,14 +82,14 @@ class AsciiArt {
     }
 
     static PrintWater() {
-        AsciiArt.PrintBlue("              _/\_/\_/\_/\_/\_/\_/\_/\_")
-        AsciiArt.PrintBlue("         _/\_/\_/\_/\_/\_/\_/\_/\_     ")
-        AsciiArt.PrintBlue("              _/\_/\_/\_/\_/\_/\_/\_/\_")
-        AsciiArt.PrintBlue("         _/\_/\_/\_/\_/\_/\_/\_/\_     ")
-        AsciiArt.PrintBlue("              _/\_/\_/\_/\_/\_/\_/\_/\_")
-        AsciiArt.PrintBlue("         _/\_/\_/\_/\_/\_/\_/\_/\_     ")
-        AsciiArt.PrintBlue("              _/\_/\_/\_/\_/\_/\_/\_/\_")
-        AsciiArt.PrintBlue("         _/\_/\_/\_/\_/\_/\_/\_/\_     ")
+        AsciiArt.PrintBlue("              _/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_")
+        AsciiArt.PrintBlue("         _/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_     ")
+        AsciiArt.PrintBlue("              _/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_")
+        AsciiArt.PrintBlue("         _/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_    ")
+        AsciiArt.PrintBlue("              _/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_")
+        AsciiArt.PrintBlue("         _/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_     ")
+        AsciiArt.PrintBlue("              _/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_")
+        AsciiArt.PrintBlue("         _/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_     ")
     }
 
 
