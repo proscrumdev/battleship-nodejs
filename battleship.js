@@ -71,15 +71,11 @@ class Battleship {
                 AsciiArt.PrintRed("Miss")
                 GridHelper.SetGridCellAsMissed(gridShowingGuessesToHitEnemy, userInputXPosition, userInputYPosition)
             }
-            //here we display sunken and remaining enemy ships?
-            const statusCheck = gameController.CheckSunkenships(this.enemyFleet)
-            console.log('==================================================')
-            console.log(statusCheck)
-            console.log('==================================================')
-            var computerPos = this.GetRandomEnemyShot();
-            var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
 
-            console.log()
+            BattleshipHelper.PrintStatus(this.enemyFleet)
+
+            var computerPos = this.GetRandomPosition();
+            var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
 
             const playerWin = gameController.CheckGameOver(this.enemyFleet);
             if(playerWin){
