@@ -192,6 +192,7 @@ class Battleship {
     }
 
     InitializeBoard() {
+        console.log(gameController.GenerateBoard(8))
         // letters
         for (let letter = 1; letter <= 8; letter++) {
             // numbers
@@ -207,19 +208,23 @@ class Battleship {
 
         console.log("Please position your fleet (Game board size is from A to H and 1 to 8) :");
 
-        this.myFleet.forEach(function (ship) {
-            console.log();
-            console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
+        this.myFleet.forEach( function (ship) {
+            console.log(`\nPlease enter the positions for the ${ship.name} (size: ${ship.size})`);
 
             AsciiArt.PrintBoat(ship.name)
             
-
             for (var i = 1; i < ship.size + 1; i++) {
-                console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
-                const position = readline.question();
+                let validPosition = false
+                let position;
+                do{
+                    console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
+                    position = readline.question();
+                    validPosition = gameController.CheckValidShipPosition(ship, position, i)
+                    if(!validPosition) console.log('Invalid entry: \n - First character must be a letter from A-H \n - The second character an intger from 1-9\n - Adjacent to your last entry \n - Not an existing entry\n')
+                }
+                while(!validPosition)
                 ship.addPosition(Battleship.ParsePosition(position));
             }
-        
         })
     }
 
