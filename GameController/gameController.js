@@ -1,4 +1,4 @@
-import GameControllerHelpers, { validInput, checkShipAllignment } from "./gameControllerHelper.js";
+const GameControllerHelpers = require('./gameControllerHelper.js')
 
 class GameController {
     
