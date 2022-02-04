@@ -1,3 +1,3 @@
-battleship = require("./battleship.js");
+const battleship = require("./battleship.js");
 
 new battleship().start();

@@ -4,10 +4,23 @@ const cliColor = require('cli-color');
 const beep = require('beepbeep');
 const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
+const telemetryClient = require("./TelemetryClient/telemetryClient.js");
+const appInsights = require('applicationinsights');
+
+let telemetry = new telemetryClient();
 
 class Battleship {
+    constructor () {
+        this.start = this.start.bind(this);
+        this.printWelcomeScreen = this.printWelcomeScreen.bind(this);
+    }
 
     start() {
+        console.log("Starting...");
+        telemetry.trackevent("ApplicationStarted", {Technolog: "Node.js"}, this.printWelcomeScreen);
+    };
+
+    printWelcomeScreen() {
         console.log(cliColor.magenta("                                     |__"));
         console.log(cliColor.magenta("                                     |\\/"));
         console.log(cliColor.magenta("                                     ---"));
@@ -46,6 +59,7 @@ class Battleship {
             console.log("Enter coordinates for your shot :");
             var position = Battleship.ParsePosition(readline.question());
             var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+
             if (isHit) {
                 beep();
 
@@ -111,9 +125,9 @@ class Battleship {
             console.log();
             console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
             for (var i = 1; i < ship.size + 1; i++) {
-                console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
-                const position = readline.question();
-                ship.addPosition(Battleship.ParsePosition(position));
+                    console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
+                    const position = readline.question();
+                    ship.addPosition(Battleship.ParsePosition(position));
             }
         })
     }
