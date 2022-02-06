@@ -5,11 +5,12 @@ const cliColor = require('cli-color');
 const beep = require('beepbeep');
 const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
-
-let telemetryWorker = new Worker("./TelemetryClient/telemetryClient.js");   
+let telemetryWorker;
 
 class Battleship {
     start() {
+        telemetryWorker = new Worker("./TelemetryClient/telemetryClient.js");   
+
         console.log("Starting...");
         telemetryWorker.postMessage({eventName: 'ApplicationStarted', properties:  {Technology: 'Node.js'}});
 
