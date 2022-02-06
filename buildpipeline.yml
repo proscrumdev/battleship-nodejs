@@ -12,7 +12,7 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '12.x'
   displayName: 'Install Node.js'
 
 - script: |
@@ -21,11 +21,11 @@ steps:
 
 - script: |
     ./node_modules/.bin/mocha ./**/*Tests.js --reporter mocha-junit-reporter --reporter-options mochaFile=testresults_mocha.xml
-  displayName: "run cucumber tests"
+  displayName: "run Mocha tests"
 
 - script: |
     ./node_modules/.bin/cucumber-js ./GameController_ATDD --format json | ./node_modules/.bin/cucumber-junit > testresults_cucumber.xml
-  displayName: "run cucumber tests"
+  displayName: "run Cucumber tests"
 
 - task: PublishTestResults@2
   inputs:
