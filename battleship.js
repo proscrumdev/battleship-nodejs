@@ -16,8 +16,7 @@ class Battleship {
 
         console.log(cliColor.magenta("                                     |__"));
         console.log(cliColor.magenta("                                     |\\/"));
-        console.log(cliColor.magenta("                                     ---"));
-        console.log(cliColor.magenta("                                     / | ["));
+        console.log(cliColor.magenta("                                     ---"));        console.log(cliColor.magenta("                                     / | ["));
         console.log(cliColor.magenta("                              !      | |||"));
         console.log(cliColor.magenta("                            _/|     _/|-++'"));
         console.log(cliColor.magenta("                        +  +--|    |--|--|_ |-"));
@@ -118,7 +117,7 @@ class Battleship {
         this.myFleet = gameController.InitializeShips();
 
         console.log("Please position your fleet (Game board size is from A to H and 1 to 8) :");
-
+        const fleet = this.myFleet;
         this.myFleet.forEach(function (ship) {
             console.log();
             console.log(`Please enter the positions for the ${ship.name} (size: ${ship.size})`);
@@ -126,7 +125,12 @@ class Battleship {
                     console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
                     const position = readline.question();
                     telemetryWorker.postMessage({eventName: 'Player_PlaceShipPosition', properties:  {Position: position, Ship: ship.name, PositionInShip: i}});
-                    ship.addPosition(Battleship.ParsePosition(position));
+                    try {
+                      ship.addPosition(Battleship.ParsePosition(position), fleet);
+                    } catch (e) {
+                      console.log(e);
+                      i--;
+                    }
             }
         })
     }
