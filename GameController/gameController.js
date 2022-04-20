@@ -27,6 +27,23 @@ class GameController {
         return returnvalue;
     }
 
+    static getHitShipCounter(ships, shot) {
+        if (shot == undefined)
+            throw "The shooting position is not defined";
+        if (ships == undefined)
+            throw "No ships defined";
+        var returnvalue = -1;
+        ships.forEach(function (ship, shipIndex) {
+            ship.positions.forEach(position => {
+                if (position.row == shot.row && position.column == shot.column){
+                    returnvalue = shipIndex;
+                }
+            });
+        });
+        return returnvalue;
+    }
+
+
     static isShipValid(ship) {
         return ship.positions.length == ship.size;
     }

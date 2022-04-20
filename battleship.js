@@ -9,88 +9,111 @@ let telemetryWorker;
 
 class Battleship {
     start() {
-        telemetryWorker = new Worker("./TelemetryClient/telemetryClient.js");   
-
-        console.log("Starting...");
+        telemetryWorker = new Worker("./TelemetryClient/telemetryClient.js");          
         telemetryWorker.postMessage({eventName: 'ApplicationStarted', properties:  {Technology: 'Node.js'}});
-
-        console.log(cliColor.magenta("                                     |__"));
-        console.log(cliColor.magenta("                                     |\\/"));
-        console.log(cliColor.magenta("                                     ---"));        console.log(cliColor.magenta("                                     / | ["));
-        console.log(cliColor.magenta("                              !      | |||"));
-        console.log(cliColor.magenta("                            _/|     _/|-++'"));
-        console.log(cliColor.magenta("                        +  +--|    |--|--|_ |-"));
-        console.log(cliColor.magenta("                     { /|__|  |/\\__|  |--- |||__/"));
-        console.log(cliColor.magenta("                    +---------------___[}-_===_.'____                 /\\"));
-        console.log(cliColor.magenta("                ____`-' ||___-{]_| _[}-  |     |_[___\\==--            \\/   _"));
-        console.log(cliColor.magenta(" __..._____--==/___]_|__|_____________________________[___\\==--____,------' .7"));
-        console.log(cliColor.magenta("|                        Welcome to Battleship                         BB-61/"));
-        console.log(cliColor.magenta(" \\_________________________________________________________________________|"));
-        console.log();
+        Battleship.displayGameStartMessage();   
 
         this.InitializeGame();
         this.StartGame();
     }
 
     StartGame() {
-        console.clear();
-        console.log("                  __");
-        console.log("                 /  \\");
-        console.log("           .-.  |    |");
-        console.log("   *    _.-'  \\  \\__/");
-        console.log("    \\.-'       \\");
-        console.log("   /          _/");
-        console.log("  |      _  /");
-        console.log("  |     /_\\'");
-        console.log("   \\    \\_/");
-        console.log("    \"\"\"\"");
-
-        do {
+        Battleship.displayHitStartMessage();
+        var isHit;
+        var position, computerPos;
+        this.hitPositions= [];
+        this.missPositions=[];
+        do {            
             console.log();
             console.log("Player, it's your turn");
             console.log("Enter coordinates for your shot :");
-            var position = Battleship.ParsePosition(readline.question());
-            var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+            position = Battleship.ParsePosition(readline.question());            
+            isHit = gameController.CheckIsHit(this.enemyFleet, position);
 
             telemetryWorker.postMessage({eventName: 'Player_ShootPosition', properties:  {Position: position.toString(), IsHit: isHit}});
 
-            if (isHit) {
-                beep();
+            if(isHit){
+                console.log("Nice hit !");
+                this.hitPositions.push(position);
+                if (this.handleShipHitMessage(this.enemyFleet, position, true)) {
+                    break;    
+                }
+            }else{
+                console.log("Miss");
+                this.missPositions.push(position);
+            }            
 
-                console.log("                \\         .  ./");
-                console.log("              \\      .:\";'.:..\"   /");
-                console.log("                  (M^^.^~~:.'\").");
-                console.log("            -   (/  .    . . \\ \\)  -");
-                console.log("               ((| :. ~ ^  :. .|))");
-                console.log("            -   (\\- |  \\ /  |  /)  -");
-                console.log("                 -\\  \\     /  /-");
-                console.log("                   \\  \\   /  /");
-            }
-
-            console.log(isHit ? "Yeah ! Nice hit !" : "Miss");
-
-            var computerPos = this.GetRandomPosition();
-            var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+            computerPos = this.GetRandomPosition();
+            isHit = gameController.CheckIsHit(this.myFleet, computerPos);
 
             telemetryWorker.postMessage({eventName: 'Computer_ShootPosition', properties:  {Position: computerPos.toString(), IsHit: isHit}});
 
-            console.log();
-            console.log(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`));
-            if (isHit) {
-                beep();
-
-                console.log("                \\         .  ./");
-                console.log("              \\      .:\";'.:..\"   /");
-                console.log("                  (M^^.^~~:.'\").");
-                console.log("            -   (/  .    . . \\ \\)  -");
-                console.log("               ((| :. ~ ^  :. .|))");
-                console.log("            -   (\\- |  \\ /  |  /)  -");
-                console.log("                 -\\  \\     /  /-");
-                console.log("                   \\  \\   /  /");
+            if(isHit){
+                console.log(`Computer shot in ${computerPos.column}${computerPos.row} and has hit your ship !`);
+                if (this.handleShipHitMessage(this.myFleet, computerPos, false)) {
+                    break;    
+                }
+            }else{
+                console.log(`Computer shot in ${computerPos.column}${computerPos.row} and miss`);
             }
+            this.displayFleetStatus();            
         }
         while (true);
     }
+
+    
+
+    handleShipHitMessage(fleet, shot, isHuman){
+        Battleship.displayShipHitMessage();
+        var hitShipIndex = gameController.getHitShipCounter(fleet, shot);
+        var isDestroyed = false;
+        if(fleet[hitShipIndex].hitCount !== fleet[hitShipIndex].size){
+            fleet[hitShipIndex].hitCount++;            
+            if(fleet[hitShipIndex].hitCount === fleet[hitShipIndex].size){
+                console.log(`The ship ${fleet[hitShipIndex].name} is destroyed.!!`);                
+            }
+        }
+
+        if(Battleship.isFleetDestroyed(fleet)){
+            this.displayFleetStatus();
+            console.log(isHuman ? "You are the winner!": "You lost!");
+            isDestroyed = true;
+        }
+        return isDestroyed;
+    }
+
+    displayFleetStatus(){
+        console.log("--------------------");
+        console.log("This is the status of your fleet");
+        console.log("");
+        this.myFleet.forEach((ship) =>{
+            const shipPositions = ship.positions.map(position=> position.toString()).join(', ');
+            if(ship.hitCount === ship.size){
+                console.log(`⛔️ ${ship.name}: is sunk`);
+            }else{
+                console.log(`✅ ${ship.hitCount}(${ship.size}) - '${ship.name}' is positioned at : ${shipPositions}`);
+            }            
+        })
+        console.log("");
+        console.log(`Hit positions: ${this.hitPositions.map(position=> position.toString()).join(', ')}`);
+        console.log(`Miss positions: ${this.missPositions.map(position=> position.toString()).join(', ')}`)
+        console.log("");
+        console.log("This is the status of your enemy fleet");
+        console.log("");
+        this.enemyFleet.forEach((ship) =>{
+            if(ship.hitCount === ship.size){
+                console.log(`⛔️ ${ship.name}: is sunk`);
+            }else{
+                console.log(`✅ ${ship.hitCount}(${ship.size}) - '${ship.name}'`);
+            }
+        });
+
+        console.log("--------------------");
+    }
+
+    static isFleetDestroyed(fleet){
+        return fleet.filter((ship)=> ship.hitCount === ship.size).length === fleet.length;
+    }  
 
     static ParsePosition(input) {
         var letter = letters.get(input.toUpperCase().substring(0, 1));
@@ -109,7 +132,8 @@ class Battleship {
     }
 
     InitializeGame() {
-        this.InitializeMyFleet();
+        this.InitializeMyFleetDemo();
+        //this.InitializeMyFleet();
         this.InitializeEnemyFleet();
     }
 
@@ -133,6 +157,32 @@ class Battleship {
                     }
             }
         })
+    }
+
+    InitializeMyFleetDemo() {
+        this.myFleet = gameController.InitializeShips();
+
+        this.myFleet[0].addPosition(new position(letters.G, 1));
+        this.myFleet[0].addPosition(new position(letters.G, 2));
+        this.myFleet[0].addPosition(new position(letters.G, 3));
+        this.myFleet[0].addPosition(new position(letters.G, 4));
+        this.myFleet[0].addPosition(new position(letters.G, 5));
+
+        this.myFleet[1].addPosition(new position(letters.A, 1));
+        this.myFleet[1].addPosition(new position(letters.A, 2));
+        this.myFleet[1].addPosition(new position(letters.A, 3));
+        this.myFleet[1].addPosition(new position(letters.A, 4));
+
+        this.myFleet[2].addPosition(new position(letters.B, 5));
+        this.myFleet[2].addPosition(new position(letters.B, 6));
+        this.myFleet[2].addPosition(new position(letters.B, 7));
+
+        this.myFleet[3].addPosition(new position(letters.D, 1));
+        this.myFleet[3].addPosition(new position(letters.D, 2));
+        this.myFleet[3].addPosition(new position(letters.D, 3));
+
+        this.myFleet[4].addPosition(new position(letters.C, 3));
+        this.myFleet[4].addPosition(new position(letters.C, 4));
     }
 
     InitializeEnemyFleet() {
@@ -160,6 +210,56 @@ class Battleship {
         this.enemyFleet[4].addPosition(new position(letters.C, 5));
         this.enemyFleet[4].addPosition(new position(letters.C, 6));
     }
+
+    static displayGameStartMessage(){
+        console.log("Starting...");
+        console.log();
+        console.log(cliColor.magenta("                                     |__"));
+        console.log(cliColor.magenta("                                     |\\/"));
+        console.log(cliColor.magenta("                                     ---"));        
+        console.log(cliColor.magenta("                                     / | ["));
+        console.log(cliColor.magenta("                              !      | |||"));
+        console.log(cliColor.magenta("                            _/|     _/|-++'"));
+        console.log(cliColor.magenta("                        +  +--|    |--|--|_ |-"));
+        console.log(cliColor.magenta("                     { /|__|  |/\\__|  |--- |||__/"));
+        console.log(cliColor.magenta("                    +---------------___[}-_===_.'____                 /\\"));
+        console.log(cliColor.magenta("                ____`-' ||___-{]_| _[}-  |     |_[___\\==--            \\/   _"));
+        console.log(cliColor.magenta(" __..._____--==/___]_|__|_____________________________[___\\==--____,------' .7"));
+        console.log(cliColor.magenta("|                        Welcome to Battleship                         BB-61/"));
+        console.log(cliColor.magenta(" \\_________________________________________________________________________|"));
+        console.log();
+    }
+
+    static displayHitStartMessage(){
+        console.clear();
+        console.log();
+        console.log("                  __");
+        console.log("                 /  \\");
+        console.log("           .-.  |    |");
+        console.log("   *    _.-'  \\  \\__/");
+        console.log("    \\.-'       \\");
+        console.log("   /          _/");
+        console.log("  |      _  /");
+        console.log("  |     /_\\'");
+        console.log("   \\    \\_/");
+        console.log("    \"\"\"\"");
+        console.log();
+    }
+    static displayShipHitMessage(){
+        beep();
+        console.log();
+        console.log("                \\         .  ./");
+        console.log("              \\      .:\";'.:..\"   /");
+        console.log("                  (M^^.^~~:.'\").");
+        console.log("            -   (/  .    . . \\ \\)  -");
+        console.log("               ((| :. ~ ^  :. .|))");
+        console.log("            -   (\\- |  \\ /  |  /)  -");
+        console.log("                 -\\  \\     /  /-");
+        console.log("                   \\  \\   /  /");
+        console.log();
+    }
+
+
 }
 
 module.exports = Battleship;

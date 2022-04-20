@@ -6,6 +6,7 @@ class Ship {
         this.size = size;
         this.color = color;
         this.positions = [];
+        this.hitCount= 0;
     }
 
     addPosition(position, fleet) {
