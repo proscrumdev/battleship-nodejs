@@ -9,9 +9,9 @@ let telemetryWorker;
 
 class Battleship {
     start() {
-        telemetryWorker = new Worker("./TelemetryClient/telemetryClient.js");          
+        telemetryWorker = new Worker("./TelemetryClient/telemetryClient.js");
         telemetryWorker.postMessage({eventName: 'ApplicationStarted', properties:  {Technology: 'Node.js'}});
-        Battleship.displayGameStartMessage();   
+        Battleship.displayGameStartMessage();
 
         this.InitializeGame();
         this.StartGame();
@@ -23,11 +23,11 @@ class Battleship {
         var position, computerPos;
         this.hitPositions= [];
         this.missPositions=[];
-        do {            
+        do {
             console.log();
             console.log("Player, it's your turn");
             console.log("Enter coordinates for your shot :");
-            position = Battleship.ParsePosition(readline.question());            
+            position = Battleship.ParsePosition(readline.question());
             isHit = gameController.CheckIsHit(this.enemyFleet, position);
 
             telemetryWorker.postMessage({eventName: 'Player_ShootPosition', properties:  {Position: position.toString(), IsHit: isHit}});
@@ -36,12 +36,12 @@ class Battleship {
                 console.log("Nice hit !");
                 this.hitPositions.push(position);
                 if (this.handleShipHitMessage(this.enemyFleet, position, true)) {
-                    break;    
+                    break;
                 }
             }else{
                 console.log("Miss");
                 this.missPositions.push(position);
-            }            
+            }
 
             computerPos = this.GetRandomPosition();
             isHit = gameController.CheckIsHit(this.myFleet, computerPos);
@@ -51,26 +51,26 @@ class Battleship {
             if(isHit){
                 console.log(`Computer shot in ${computerPos.column}${computerPos.row} and has hit your ship !`);
                 if (this.handleShipHitMessage(this.myFleet, computerPos, false)) {
-                    break;    
+                    break;
                 }
             }else{
                 console.log(`Computer shot in ${computerPos.column}${computerPos.row} and miss`);
             }
-            this.displayFleetStatus();            
+            this.displayFleetStatus();
         }
         while (true);
     }
 
-    
+
 
     handleShipHitMessage(fleet, shot, isHuman){
         Battleship.displayShipHitMessage();
         var hitShipIndex = gameController.getHitShipCounter(fleet, shot);
         var isDestroyed = false;
         if(fleet[hitShipIndex].hitCount !== fleet[hitShipIndex].size){
-            fleet[hitShipIndex].hitCount++;            
+            fleet[hitShipIndex].hitCount++;
             if(fleet[hitShipIndex].hitCount === fleet[hitShipIndex].size){
-                console.log(`The ship ${fleet[hitShipIndex].name} is destroyed.!!`);                
+                console.log(`The ship ${fleet[hitShipIndex].name} is destroyed.!!`);
             }
         }
 
@@ -92,7 +92,7 @@ class Battleship {
                 console.log(`⛔️ ${ship.name}: is sunk`);
             }else{
                 console.log(`✅ ${ship.hitCount}(${ship.size}) - '${ship.name}' is positioned at : ${shipPositions}`);
-            }            
+            }
         })
         console.log("");
         console.log(`Hit positions: ${this.hitPositions.map(position=> position.toString()).join(', ')}`);
@@ -113,12 +113,16 @@ class Battleship {
 
     static isFleetDestroyed(fleet){
         return fleet.filter((ship)=> ship.hitCount === ship.size).length === fleet.length;
-    }  
+    }
 
     static ParsePosition(input) {
-        var letter = letters.get(input.toUpperCase().substring(0, 1));
-        var number = parseInt(input.substring(1, 2), 10);
-        return new position(letter, number);
+      const result = /^([A-H]+[1-8])$/.test(input);
+      if(!result) {
+        throw "Invalid Coordinates (Acceptable: A-H & 1-8. Example: A8)";
+      }
+      var letter = letters.get(input.toUpperCase().substring(0, 1));
+      var number = parseInt(input.substring(1, 2), 10);
+      return new position(letter, number);
     }
 
     GetRandomPosition() {
@@ -216,7 +220,7 @@ class Battleship {
         console.log();
         console.log(cliColor.magenta("                                     |__"));
         console.log(cliColor.magenta("                                     |\\/"));
-        console.log(cliColor.magenta("                                     ---"));        
+        console.log(cliColor.magenta("                                     ---"));
         console.log(cliColor.magenta("                                     / | ["));
         console.log(cliColor.magenta("                              !      | |||"));
         console.log(cliColor.magenta("                            _/|     _/|-++'"));
