@@ -1,6 +1,8 @@
 const Battleship = require("../battleship.js");
 
 class GameController {
+  static positions = [];
+
   static InitializeShips() {
     var colors = require("cli-color");
     const Ship = require("./ship.js");
@@ -14,8 +16,15 @@ class GameController {
     return ships;
   }
 
-  static CheckIsHit(ships, shot) {
-    console.log("CHECK IS HIT");
+  static getUsedPositions() {
+    return this.positions;
+  }
+
+  static addPosition(shot) {
+    this.positions.push(shot);
+  }
+
+  static CheckIsHit(ships, shot, isMe) {
     if (shot == undefined) throw "The shooting position is not defined";
     if (ships == undefined) throw "No ships defined";
     var returnvalue = false;
@@ -27,6 +36,10 @@ class GameController {
         }
       });
     });
+
+    if (isMe) {
+      this.addPosition(shot);
+    }
 
     return returnvalue;
   }
