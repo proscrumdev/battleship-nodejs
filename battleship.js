@@ -83,6 +83,11 @@ class Battleship {
           : ""
       );
 
+      var sunkenShips = gameController.GetSunkenShips(this.enemyFleet);
+      if (sunkenShips.length) {
+        sunkenShips.forEach(ship => console.log(ship.color('You sunk: ', ship.name)));
+      }
+
       console.log();
       console.log("Player, it's your turn");
       console.log("Enter coordinates for your shot :");
