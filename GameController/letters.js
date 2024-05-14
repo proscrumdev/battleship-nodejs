@@ -1,4 +1,5 @@
 require('enum').register();
+
 var Letters = new Enum({
     'A': 1,
     'B': 2,
@@ -7,7 +8,9 @@ var Letters = new Enum({
     'E': 5,
     'F': 6,
     'G': 7,
-    'H': 8
+    'H': 8,
+    'I': 9,
+    'J': 10
 }, {
     ignoreCase: true
 });
