@@ -113,6 +113,8 @@ class Battleship {
             console.log(`The position ${input} is not valid, try again.`);
         }
 
+        console.log("good")
+
         if (this.CheckPositionIsValid(letter, number)) {
             return new position(letter, number);
         } else {
@@ -152,12 +154,16 @@ class Battleship {
                     console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
 
                     const position = readline.question();
-                    telemetryWorker.postMessage({eventName: 'Player_PlaceShipPosition', properties:  {Position: position, Ship: ship.name, PositionInShip: i}});
 
                     let validPosition = Battleship.ParsePosition(position);
 
                     if (validPosition) {
+                        telemetryWorker.postMessage({eventName: 'Player_PlaceShipPosition', properties:  {Position: position, Ship: ship.name, PositionInShip: i}});
+
                         ship.addPosition(validPosition);
+                    } else {
+                        // redo this iteration;
+                        i = i - 1;
                     }
             }
         })
