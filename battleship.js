@@ -65,14 +65,29 @@ class Battleship {
 
       console.log();
       console.log("Player, it's your turn");
-      console.log("Enter coordinates for your shot :");
-      var position = Battleship.ParsePosition(readline.question());
-      var isHit = gameController.CheckIsHit(this.enemyFleet, position, true);
+      console.log("Enter coordinates for your shot:");
 
-      telemetryWorker.postMessage({
-        eventName: "Player_ShootPosition",
-        properties: { Position: position.toString(), IsHit: isHit },
-      });
+      let isValidPosition = false;
+      do {
+        var position = Battleship.ParsePosition(readline.question());
+        if (position) {
+          isValidPosition = true;
+        }
+      } while (!isValidPosition);
+
+      var isHit;
+      try {
+        isHit = gameController.CheckIsHit(this.enemyFleet, position, true);
+      } catch {
+        isHit = false;
+      }
+
+      if (position) {
+        telemetryWorker.postMessage({
+          eventName: "Player_ShootPosition",
+          properties: { Position: position.toString(), IsHit: isHit },
+        });
+      }
 
       if (isHit) {
         beep();

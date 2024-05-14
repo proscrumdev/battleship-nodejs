@@ -21,16 +21,24 @@ class GameController {
   }
 
   static addPosition(shot) {
-    this.positions.push(shot);
+    if (shot) {
+      this.positions.push(shot);
+    }
   }
 
   static CheckIsHit(ships, shot, isMe) {
-    if (shot == undefined) throw "The shooting position is not defined";
-    if (ships == undefined) throw "No ships defined";
+    if (shot == undefined) {
+      throw "The shooting position is not defined";
+    }
+
+    if (ships == undefined) {
+      throw "No ships defined";
+    }
+
     var returnvalue = false;
     ships.forEach(function (ship) {
       ship.positions.forEach((position) => {
-        if (position.row == shot.row && position.column == shot.column) {
+        if (position && shot && position.row == shot.row && position.column == shot.column) {
           ship.addHit(`${shot.column}${shot.row}`);
 
           returnvalue = true;
