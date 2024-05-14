@@ -47,47 +47,52 @@ class Battleship {
         console.log("    \"\"\"\"");
 
         do {
+            console.log('--------------------- Your Turn ------------------------')
+            console.log(gameController.getUsedPositions().length > 0 ? `You have guessed ${gameController.getUsedPositions().toString()}` : '');
+
             console.log();
             console.log("Player, it's your turn");
             console.log("Enter coordinates for your shot :");
             var position = Battleship.ParsePosition(readline.question());
-            var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+            var isHit = gameController.CheckIsHit(this.enemyFleet, position, true);
 
             telemetryWorker.postMessage({eventName: 'Player_ShootPosition', properties:  {Position: position.toString(), IsHit: isHit}});
 
             if (isHit) {
                 beep();
 
-                console.log("                \\         .  ./");
-                console.log("              \\      .:\";'.:..\"   /");
-                console.log("                  (M^^.^~~:.'\").");
-                console.log("            -   (/  .    . . \\ \\)  -");
-                console.log("               ((| :. ~ ^  :. .|))");
-                console.log("            -   (\\- |  \\ /  |  /)  -");
-                console.log("                 -\\  \\     /  /-");
-                console.log("                   \\  \\   /  /");
+                console.log(cliColor.cyan("                \\         .  ./"));
+                console.log(cliColor.cyan("              \\      .:\";'.:..\"   /"));
+                console.log(cliColor.cyan("                  (M^^.^~~:.'\")."));
+                console.log(cliColor.cyan("            -   (/  .    . . \\ \\)  -"));
+                console.log(cliColor.cyan("               ((| :. ~ ^  :. .|))"));
+                console.log(cliColor.cyan("            -   (\\- |  \\ /  |  /)  -"));
+                console.log(cliColor.cyan("                 -\\  \\     /  /-"));
+                console.log(cliColor.cyan("                   \\  \\   /  /"));
             }
 
-            console.log(isHit ? "Yeah ! Nice hit !" : "Miss");
+            console.log(isHit ? cliColor.red("Yeah ! Nice hit !") : cliColor.yellow("Miss"));
+
+            console.log('--------------------- Computer\'s Turn ------------------------')
 
             var computerPos = this.GetRandomPosition();
-            var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+            var isHit = gameController.CheckIsHit(this.myFleet, computerPos, false);
 
             telemetryWorker.postMessage({eventName: 'Computer_ShootPosition', properties:  {Position: computerPos.toString(), IsHit: isHit}});
 
             console.log();
-            console.log(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? `has hit your ship !` : `miss`));
+            console.log(`Computer shot in ${computerPos.column}${computerPos.row} and ` + (isHit ? cliColor.red(`has hit your ship !`) : cliColor.yellow(`miss`)));
             if (isHit) {
                 beep();
 
-                console.log("                \\         .  ./");
-                console.log("              \\      .:\";'.:..\"   /");
-                console.log("                  (M^^.^~~:.'\").");
-                console.log("            -   (/  .    . . \\ \\)  -");
-                console.log("               ((| :. ~ ^  :. .|))");
-                console.log("            -   (\\- |  \\ /  |  /)  -");
-                console.log("                 -\\  \\     /  /-");
-                console.log("                   \\  \\   /  /");
+                console.log(cliColor.cyan("                \\         .  ./"));
+                console.log(cliColor.cyan("              \\      .:\";'.:..\"   /"));
+                console.log(cliColor.cyan("                  (M^^.^~~:.'\")."));
+                console.log(cliColor.cyan("            -   (/  .    . . \\ \\)  -"));
+                console.log(cliColor.cyan("               ((| :. ~ ^  :. .|))"));
+                console.log(cliColor.cyan("            -   (\\- |  \\ /  |  /)  -"));
+                console.log(cliColor.cyan("                 -\\  \\     /  /-"));
+                console.log(cliColor.cyan("                   \\  \\   /  /"));
             }
         }
         while (true);
