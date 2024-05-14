@@ -7,6 +7,7 @@ const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
 let telemetryWorker;
 
+const gridSize = 10;
 class Battleship {
   start() {
     telemetryWorker = new Worker("./TelemetryClient/telemetryClient.js");
@@ -151,19 +152,41 @@ class Battleship {
     } while (!amIDead && !isComputerDead);
   }
 
+  static CheckPositionIsValid(letter, number) {
+    // check if position is valid in the first place
+    let validLetter = letters.get(letter) <= gridSize;
+    let validNumber = number <= gridSize;
+
+    let validPosition = validLetter && validNumber;
+
+    return validPosition;
+  }
+
   static ParsePosition(input) {
-    var letter = letters.get(input.toUpperCase().substring(0, 1));
-    var number = parseInt(input.substring(1, 2), 10);
-    return new position(letter, number);
+    // make sure the input can be parsed
+    try {
+      var letter = letters.get(input.toUpperCase().substring(0, 1));
+      var number = parseInt(input.substring(1, 3), 10);
+    } catch {
+      console.log(`The position ${input} is not valid, try again.`);
+    }
+
+    if (this.CheckPositionIsValid(letter, number)) {
+      return new position(letter, number);
+    } else {
+      console.log(`The position ${input} is not valid, try again.`);
+    }
   }
 
   GetRandomPosition() {
-    var rows = 8;
-    var lines = 8;
+    var rows = gridSize;
+    var lines = gridSize;
+
     var rndColumn = Math.floor(Math.random() * lines);
     var letter = letters.get(rndColumn + 1);
     var number = Math.floor(Math.random() * rows);
     var result = new position(letter, number);
+
     return result;
   }
 
@@ -176,7 +199,7 @@ class Battleship {
     this.myFleet = gameController.InitializeShips();
 
     console.log(
-      "Please position your fleet (Game board size is from A to H and 1 to 8) :"
+      "Please position your fleet (Game board size is from A to H and 1 to 10) :"
     );
 
     this.myFleet.forEach(function (ship) {
@@ -184,18 +207,28 @@ class Battleship {
       console.log(
         `Please enter the positions for the ${ship.name} (size: ${ship.size})`
       );
+
       for (var i = 1; i < ship.size + 1; i++) {
         console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
+
         const position = readline.question();
-        telemetryWorker.postMessage({
-          eventName: "Player_PlaceShipPosition",
-          properties: {
-            Position: position,
-            Ship: ship.name,
-            PositionInShip: i,
-          },
-        });
-        ship.addPosition(Battleship.ParsePosition(position));
+
+        let validPosition = Battleship.ParsePosition(position);
+        if (validPosition) {
+          telemetryWorker.postMessage({
+            eventName: "Player_PlaceShipPosition",
+            properties: {
+              Position: position,
+              Ship: ship.name,
+              PositionInShip: i,
+            },
+          });
+
+            ship.addPosition(validPosition);
+        } else {
+            // redo this iteration;
+            i = i - 1;
+        }
       }
     });
   }
