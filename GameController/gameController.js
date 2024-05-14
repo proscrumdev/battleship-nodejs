@@ -36,7 +36,7 @@ class GameController {
     var returnvalue = false;
     ships.forEach(function (ship) {
       ship.positions.forEach((position) => {
-        if (position.row == shot.row && position.column == shot.column) {
+        if (position && shot && position.row == shot.row && position.column == shot.column) {
           ship.addHit(`${shot.column}${shot.row}`);
 
           returnvalue = true;
