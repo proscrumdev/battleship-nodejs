@@ -7,11 +7,11 @@ class GameController {
     var colors = require("cli-color");
     const Ship = require("./ship.js");
     var ships = [
-      new Ship("Aircraft Carrier", 5, colors.CadetBlue),
-      new Ship("Battleship", 4, colors.Red),
-      new Ship("Submarine", 3, colors.Chartreuse),
-      new Ship("Destroyer", 3, colors.Yellow),
-      new Ship("Patrol Boat", 2, colors.Orange),
+      new Ship("Aircraft Carrier", 5, colors.blue),
+      new Ship("Battleship", 4, colors.red),
+      new Ship("Submarine", 3, colors.green),
+      new Ship("Destroyer", 3, colors.yellow),
+      new Ship("Patrol Boat", 2, colors.cyan),
     ];
     return ships;
   }
@@ -32,6 +32,7 @@ class GameController {
       ship.positions.forEach((position) => {
         if (position.row == shot.row && position.column == shot.column) {
           ship.addHit(`${shot.column}${shot.row}`);
+
           returnvalue = true;
         }
       });
@@ -46,8 +47,13 @@ class GameController {
 
   static CheckIsFleetSunk(ships) {
     if (ships == undefined) throw "No ships defined";
-    var remainingShips = ships.filter((ship) => !ship.isSunk());
-    return remainingShips.length === 0;
+    var sunkenShips = this.GetSunkenShips(ships);
+    return sunkenShips.length === ships.length;
+  }
+
+  static GetSunkenShips(ships) {
+    if (ships == undefined) throw "No ships defined";
+    return ships.filter(ship => ship.isSunk());
   }
 
   static isShipValid(ship) {
