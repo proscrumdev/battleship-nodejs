@@ -28,11 +28,11 @@ class GameController {
 
   static CheckIsHit(ships, shot, isMe) {
     if (shot == undefined) {
-      console.log("The shooting position is not defined")
+      throw "The shooting position is not defined";
     }
 
     if (ships == undefined) {
-      console.log("No ships defined");
+      throw "No ships defined";
     }
 
     var returnvalue = false;
