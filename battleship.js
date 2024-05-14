@@ -152,8 +152,33 @@ class Battleship {
       var amIDead = gameController.CheckIsFleetSunk(this.myFleet);
       var isComputerDead = gameController.CheckIsFleetSunk(this.enemyFleet);
 
-      if (amIDead) console.log("You lost!");
-      if (isComputerDead) console.log("You are the winner!");
+      if (amIDead){
+        console.log("  _____                         ____");                 
+        console.log(" / ____|                       / __ \\");                
+        console.log("| |  __  __ _ _ __ ___   ___  | |  | |_   _____ _ __"); 
+        console.log("| | |_ |/ _` | '_ ` _ \\ / _ \\ | |  | \\ \\ / / _ \\ '__|");
+        console.log("| |__| | (_| | | | | | |  __/ | |__| |\\ V /  __/ |");   
+        console.log(" \\_____|\\__,_|_| |_| |_|\\___|  \\____/  \\_/ \\___|_|");
+      }
+      if (isComputerDead) {
+        console.log("                             # #  ( )");
+        console.log("                          ___#_#___|__");
+        console.log("                      _  |____________|  _");
+        console.log("               _=====| | |            | | |==== _");
+        console.log("         =====| |.---------------------------. | |====");
+        console.log("<--------------------'   .  .  .  .  .  .  .  .   '--------------/");
+        console.log(" \\                                                             /");
+        console.log("  \\_______________________________________________WWS_________/");
+        console.log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+        console.log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+        console.log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww ");
+        console.log("__          ___");                       
+        console.log("\\ \\        / (_)");                      
+        console.log(" \\ \\  /\\  / / _ _ __  _ __   ___ _ __"); 
+        console.log("  \\ \\/  \\/ / | | '_ \\| '_ \\ / _ \\ '__|         You've Sunk all");
+        console.log("   \\  /\\  /  | | | | | | | |  __/ |              Enemy Ships!");
+        console.log("    \\/  \\/   |_|_| |_|_| |_|\\___|_|");                   
+    }
     } while (!amIDead && !isComputerDead);
   }
 
@@ -204,7 +229,7 @@ class Battleship {
     this.myFleet = gameController.InitializeShips();
 
     console.log(
-      "Please position your fleet (Game board size is from A to H and 1 to 10) :"
+      "Please position your fleet (Game board size is from A to J and 1 to 10) :"
     );
 
     this.myFleet.forEach(function (ship) {
