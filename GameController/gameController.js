@@ -21,7 +21,9 @@ class GameController {
   }
 
   static addPosition(shot) {
-    this.positions.push(shot);
+    if (shot) {
+      this.positions.push(shot);
+    }
   }
 
   static CheckIsHit(ships, shot, isMe) {
@@ -32,7 +34,7 @@ class GameController {
     if (ships == undefined) {
       console.log("No ships defined");
     }
-    
+
     var returnvalue = false;
     ships.forEach(function (ship) {
       ship.positions.forEach((position) => {
