@@ -1,7 +1,8 @@
 const Battleship = require("../battleship.js");
 
 class GameController {
-  static positions = [];
+  static userPositions = [];
+  static computerPositions = [];
 
   static InitializeShips() {
     var colors = require("cli-color");
@@ -16,14 +17,18 @@ class GameController {
     return ships;
   }
 
-  static getUsedPositions() {
-    return this.positions;
+  static getUserGuessedPositions() {
+    return this.userPositions;
   }
 
-  static addPosition(shot) {
+  static addUserPosition(shot) {
     if (shot) {
-      this.positions.push(shot);
+      this.userPositions.push(shot);
     }
+  }
+
+  static addComputerPosition(shot) {
+    this.computerPositions.push(shot.toString());
   }
 
   static CheckIsHit(ships, shot, isMe) {
@@ -47,7 +52,9 @@ class GameController {
     });
 
     if (isMe) {
-      this.addPosition(shot);
+      this.addUserPosition(shot);
+    } else {
+      this.addComputerPosition(shot);
     }
 
     return returnvalue;

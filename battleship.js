@@ -53,8 +53,8 @@ class Battleship {
     do {
       console.log("--------------------- Your Turn ------------------------");
       console.log(
-        gameController.getUsedPositions().length > 0
-          ? `You have guessed ${gameController.getUsedPositions().toString()}`
+        gameController.getUserGuessedPositions().length > 0
+          ? `You have guessed ${gameController.getUserGuessedPositions().toString()}`
           : ""
       );
 
@@ -109,6 +109,9 @@ class Battleship {
       console.log(
         "--------------------- Computer's Turn ------------------------"
       );
+
+      var computerGuesses = gameController.computerPositions;
+      console.log(computerGuesses.length > 0 ? `Computer has guessed ${computerGuesses.sort()}` : '');
 
       var computerPos = this.GetRandomPosition();
       var isHit = gameController.CheckIsHit(this.myFleet, computerPos, false);
@@ -205,6 +208,10 @@ class Battleship {
     var letter = letters.get(rndColumn + 1);
     var number = Math.floor(Math.random() * rows);
     var result = new position(letter, number);
+
+    if (gameController.computerPositions.indexOf(result.toString()) !== -1) {
+        return this.GetRandomPosition();
+    }
 
     return result;
   }
