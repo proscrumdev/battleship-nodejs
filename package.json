@@ -6,7 +6,8 @@
   "scripts": {
     "mocha": "mocha ./**/*Tests.js",
     "cucumber": "./node_modules/.bin/cucumber-js ./GameController_ATDD",
-    "test": "npm run mocha && npm run cucumber"
+    "test": "npm run mocha && npm run cucumber",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -39,6 +40,7 @@
   "devDependencies": {
     "@cucumber/cucumber": "^7.3.2",
     "cucumber-junit": "^1.7.1",
-    "mocha-junit-reporter": "^2.0.2"
+    "mocha-junit-reporter": "^2.0.2",
+    "prettier": "^3.3.3"
   }
 }
