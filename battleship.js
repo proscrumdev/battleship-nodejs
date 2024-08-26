@@ -76,7 +76,7 @@ class Battleship {
     console.log('    """"');
 
     do {
-      console.log();
+      console.log("=======================================");
       console.log("Player, it's your turn");
       console.log("Enter coordinates for your shot :");
       var position = Battleship.ParsePosition(readline.question());
@@ -145,8 +145,7 @@ class Battleship {
     var letter = letters.get(rndColumn + 1);
     var number = Math.floor(Math.random() * rows);
     var result = new position(letter, number);
-    // return result;
-    return new position(1, 1);
+    return result;
   }
 
   InitializeGame() {
@@ -158,13 +157,19 @@ class Battleship {
     this.myFleet = gameController.InitializeShips();
 
     console.log(
-      "Please position your fleet (Game board size is from A to H and 1 to 8) :"
+      `Please position your fleet (Game board size is from ${cliColor.yellow(
+        "A"
+      )} to ${cliColor.yellow("H")} and ${cliColor.yellow(
+        "1"
+      )} to ${cliColor.yellow("8")}) :`
     );
 
     this.myFleet.forEach(function (ship) {
       console.log();
       console.log(
-        `Please enter the positions for the ${ship.name} (size: ${ship.size})`
+        `Please enter the positions for the ${
+          ship.name
+        } (size: ${cliColor.yellow(ship.size)})`
       );
       for (var i = 1; i < ship.size + 1; i++) {
         console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
