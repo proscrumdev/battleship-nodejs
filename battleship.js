@@ -23,38 +23,38 @@ class Battleship {
     console.log(cliColor.magenta("                                     / | ["));
     console.log(cliColor.magenta("                              !      | |||"));
     console.log(
-      cliColor.magenta("                            _/|     _/|-++'")
+      cliColor.magenta("                            _/|     _/|-++'"),
     );
     console.log(
-      cliColor.magenta("                        +  +--|    |--|--|_ |-")
+      cliColor.magenta("                        +  +--|    |--|--|_ |-"),
     );
     console.log(
-      cliColor.magenta("                     { /|__|  |/\\__|  |--- |||__/")
-    );
-    console.log(
-      cliColor.magenta(
-        "                    +---------------___[}-_===_.'____                 /\\"
-      )
+      cliColor.magenta("                     { /|__|  |/\\__|  |--- |||__/"),
     );
     console.log(
       cliColor.magenta(
-        "                ____`-' ||___-{]_| _[}-  |     |_[___\\==--            \\/   _"
-      )
+        "                    +---------------___[}-_===_.'____                 /\\",
+      ),
     );
     console.log(
       cliColor.magenta(
-        " __..._____--==/___]_|__|_____________________________[___\\==--____,------' .7"
-      )
+        "                ____`-' ||___-{]_| _[}-  |     |_[___\\==--            \\/   _",
+      ),
     );
     console.log(
       cliColor.magenta(
-        "|                        Welcome to Battleship                         BB-61/"
-      )
+        " __..._____--==/___]_|__|_____________________________[___\\==--____,------' .7",
+      ),
     );
     console.log(
       cliColor.magenta(
-        " \\_________________________________________________________________________|"
-      )
+        "|                        Welcome to Battleship                         BB-61/",
+      ),
+    );
+    console.log(
+      cliColor.magenta(
+        " \\_________________________________________________________________________|",
+      ),
     );
     console.log();
 
@@ -127,7 +127,7 @@ class Battleship {
 
       console.log(
         `Computer shot in ${computerPos.column}${computerPos.row} and ` +
-          (isHit ? cliColor.red("has hit your ship!") : cliColor.green("miss"))
+          (isHit ? cliColor.red("has hit your ship!") : cliColor.green("miss")),
       );
     } while (true);
   }
@@ -158,10 +158,10 @@ class Battleship {
 
     console.log(
       `Please position your fleet (Game board size is from ${cliColor.yellow(
-        "A"
+        "A",
       )} to ${cliColor.yellow("H")} and ${cliColor.yellow(
-        "1"
-      )} to ${cliColor.yellow("8")}) :`
+        "1",
+      )} to ${cliColor.yellow("8")}) :`,
     );
 
     this.myFleet.forEach(function (ship) {
@@ -169,7 +169,7 @@ class Battleship {
       console.log(
         `Please enter the positions for the ${
           ship.name
-        } (size: ${cliColor.yellow(ship.size)})`
+        } (size: ${cliColor.yellow(ship.size)})`,
       );
       for (var i = 1; i < ship.size + 1; i++) {
         console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
