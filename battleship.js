@@ -125,8 +125,9 @@ class Battleship {
         console.log(cliColor.red("                   \\  \\   /  /"));
       }
 
+      var position = `${computerPos.column}${computerPos.row}`;
       console.log(
-        `Computer shot in ${computerPos.column}${computerPos.row} and ` +
+        `Computer shot in ${cliColor.yellow(position)} and ` +
           (isHit ? cliColor.red("has hit your ship!") : cliColor.green("miss")),
       );
     } while (true);
