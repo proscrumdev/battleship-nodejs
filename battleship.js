@@ -6,21 +6,7 @@ const beep = require("beepbeep");
 const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
 let telemetryWorker;
-
-// Ship struct
-class Ship {
-  constructor(name, size) {
-    this.name = name;
-    this.size = size;
-    this.positions = [];
-    this.hits = [];
-    this.orientation = null; // 'horizontal' or 'vertical'
-  }
-
-  addPosition(pos) {
-    this.positions.push(pos);
-  }
-}
+const Ship = require("./GameController/ship.js");
 
 class Battleship {
   start() {
@@ -95,7 +81,10 @@ class Battleship {
       console.log("Player, it's your turn");
       console.log("Enter coordinates for your shot :");
       var position = Battleship.ParsePosition(readline.question());
-      var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+      var isHit = gameController.CheckIsHitAndMarkTheShip(
+        this.enemyFleet,
+        position,
+      );
 
       telemetryWorker.postMessage({
         eventName: "Player_ShootPosition",
@@ -119,7 +108,10 @@ class Battleship {
       }
 
       var computerPos = this.GetRandomPosition();
-      var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+      var isHit = gameController.CheckIsHitAndMarkTheShip(
+        this.myFleet,
+        computerPos,
+      );
 
       telemetryWorker.postMessage({
         eventName: "Computer_ShootPosition",
