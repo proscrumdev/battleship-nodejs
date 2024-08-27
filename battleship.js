@@ -1,4 +1,4 @@
-const { Worker, isMainThread } = require("worker_threads");
+const { Worker } = require("worker_threads");
 const readline = require("readline-sync");
 const gameController = require("./GameController/gameController.js");
 const cliColor = require("cli-color");
@@ -6,6 +6,20 @@ const beep = require("beepbeep");
 const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
 let telemetryWorker;
+
+// Ship struct
+class Ship {
+  constructor(name, size) {
+    this.name = name;
+    this.size = size;
+    this.positions = [];
+    this.orientation = null; // 'horizontal' or 'vertical'
+  }
+
+  addPosition(pos) {
+    this.positions.push(pos);
+  }
+}
 
 class Battleship {
   start() {
@@ -149,13 +163,15 @@ class Battleship {
     return result;
   }
 
+  
+
   InitializeGame() {
     this.InitializeMyFleet();
     this.InitializeEnemyFleet();
   }
 
   InitializeMyFleet() {
-    this.myFleet = gameController.InitializeShips();
+    this.myFleet = gameController.InitializeShips().map(ship => new Ship(ship.name, ship.size));
 
     console.log(
       `Please position your fleet (Game board size is from ${cliColor.yellow(
@@ -189,30 +205,55 @@ class Battleship {
   }
 
   InitializeEnemyFleet() {
-    this.enemyFleet = gameController.InitializeShips();
+    this.enemyFleet = gameController.InitializeShips().map(ship => new Ship(ship.name, ship.size));
 
-    this.enemyFleet[0].addPosition(new position(letters.B, 4));
-    this.enemyFleet[0].addPosition(new position(letters.B, 5));
-    this.enemyFleet[0].addPosition(new position(letters.B, 6));
-    this.enemyFleet[0].addPosition(new position(letters.B, 7));
-    this.enemyFleet[0].addPosition(new position(letters.B, 8));
+    this.enemyFleet.forEach(ship => {
+      let placed = false;
+      while (!placed) {
+        placed = this.PlaceShipRandomly(ship);
+      }
+    });
+  }
 
-    this.enemyFleet[1].addPosition(new position(letters.E, 6));
-    this.enemyFleet[1].addPosition(new position(letters.E, 7));
-    this.enemyFleet[1].addPosition(new position(letters.E, 8));
-    this.enemyFleet[1].addPosition(new position(letters.E, 9));
+  PlaceShipRandomly(ship) {
+    const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+    ship.orientation = orientation;
 
-    this.enemyFleet[2].addPosition(new position(letters.A, 3));
-    this.enemyFleet[2].addPosition(new position(letters.B, 3));
-    this.enemyFleet[2].addPosition(new position(letters.C, 3));
+    const startRow = Math.floor(Math.random() * 8) + 1;
+    const startCol = Math.floor(Math.random() * 8) + 1;
 
-    this.enemyFleet[3].addPosition(new position(letters.F, 8));
-    this.enemyFleet[3].addPosition(new position(letters.G, 8));
-    this.enemyFleet[3].addPosition(new position(letters.H, 8));
+    if (this.IsValidPlacement(ship, startRow, startCol, orientation)) {
+      for (let i = 0; i < ship.size; i++) {
+        const row = orientation === 'vertical' ? startRow + i : startRow;
+        const col = orientation === 'horizontal' ? startCol + i : startCol;
+        ship.addPosition(new position(letters.get(col), row));
+      }
+      return true;
+    }
 
-    this.enemyFleet[4].addPosition(new position(letters.C, 5));
-    this.enemyFleet[4].addPosition(new position(letters.C, 6));
+    return false;
+  }
+
+  IsValidPlacement(ship, startRow, startCol, orientation) {
+    for (let i = 0; i < ship.size; i++) {
+      const row = orientation === 'vertical' ? startRow + i : startRow;
+      const col = orientation === 'horizontal' ? startCol + i : startCol;
+
+      if (row < 1 || row > 8 || col < 1 || col > 8) {
+        return false;
+      }
+
+      if (this.IsPositionOccupied(row, col)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  IsPositionOccupied(row, col) {
+    return this.enemyFleet.some(ship =>
+      ship.positions.some(pos => pos.row === row && pos.column === letters.get(col))
+    );
   }
 }
-
 module.exports = Battleship;
