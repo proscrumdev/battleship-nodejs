@@ -10,3 +10,4 @@ describe('parsePositionTests', function() {
     assert.deepStrictEqual(actual, expected);
   });
 });
+

@@ -6,20 +6,7 @@ const beep = require("beepbeep");
 const position = require("./GameController/position.js");
 const letters = require("./GameController/letters.js");
 let telemetryWorker;
-
-// Ship struct
-class Ship {
-  constructor(name, size) {
-    this.name = name;
-    this.size = size;
-    this.positions = [];
-    this.orientation = null; // 'horizontal' or 'vertical'
-  }
-
-  addPosition(pos) {
-    this.positions.push(pos);
-  }
-}
+const Ship = require("./GameController/ship.js");
 
 class Battleship {
   start() {
@@ -94,7 +81,16 @@ class Battleship {
       console.log("Player, it's your turn");
       console.log("Enter coordinates for your shot :");
       var position = Battleship.ParsePosition(readline.question());
-      var isHit = gameController.CheckIsHit(this.enemyFleet, position);
+      var isHit = gameController.CheckIsHitAndMarkTheShip(
+        this.enemyFleet,
+        position,
+      );
+
+      var isFleetRuined = gameController.isAllShipsSunk(this.enemyFleet);
+      if (isFleetRuined) {
+        console.log("You are the winner!");
+        break
+      }
 
       telemetryWorker.postMessage({
         eventName: "Player_ShootPosition",
@@ -118,7 +114,16 @@ class Battleship {
       }
 
       var computerPos = this.GetRandomPosition();
-      var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+      var isHit = gameController.CheckIsHitAndMarkTheShip(
+        this.myFleet,
+        computerPos,
+      );
+
+      var isFleetRuined = gameController.isAllShipsSunk(this.myFleet);
+      if (isFleetRuined) {
+        console.log("You lost!");
+        break
+      }
 
       telemetryWorker.postMessage({
         eventName: "Computer_ShootPosition",
@@ -163,15 +168,15 @@ class Battleship {
     return result;
   }
 
-  
-
   InitializeGame() {
     this.InitializeMyFleet();
     this.InitializeEnemyFleet();
   }
 
   InitializeMyFleet() {
-    this.myFleet = gameController.InitializeShips().map(ship => new Ship(ship.name, ship.size));
+    this.myFleet = gameController
+      .InitializeShips()
+      .map((ship) => new Ship(ship.name, ship.size));
 
     console.log(
       `Please position your fleet (Game board size is from ${cliColor.yellow(
@@ -205,9 +210,11 @@ class Battleship {
   }
 
   InitializeEnemyFleet() {
-    this.enemyFleet = gameController.InitializeShips().map(ship => new Ship(ship.name, ship.size));
+    this.enemyFleet = gameController
+      .InitializeShips()
+      .map((ship) => new Ship(ship.name, ship.size));
 
-    this.enemyFleet.forEach(ship => {
+    this.enemyFleet.forEach((ship) => {
       let placed = false;
       while (!placed) {
         placed = this.PlaceShipRandomly(ship);
@@ -216,7 +223,7 @@ class Battleship {
   }
 
   PlaceShipRandomly(ship) {
-    const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+    const orientation = Math.random() < 0.5 ? "horizontal" : "vertical";
     ship.orientation = orientation;
 
     const startRow = Math.floor(Math.random() * 8) + 1;
@@ -224,8 +231,8 @@ class Battleship {
 
     if (this.IsValidPlacement(ship, startRow, startCol, orientation)) {
       for (let i = 0; i < ship.size; i++) {
-        const row = orientation === 'vertical' ? startRow + i : startRow;
-        const col = orientation === 'horizontal' ? startCol + i : startCol;
+        const row = orientation === "vertical" ? startRow + i : startRow;
+        const col = orientation === "horizontal" ? startCol + i : startCol;
         ship.addPosition(new position(letters.get(col), row));
       }
       return true;
@@ -236,8 +243,8 @@ class Battleship {
 
   IsValidPlacement(ship, startRow, startCol, orientation) {
     for (let i = 0; i < ship.size; i++) {
-      const row = orientation === 'vertical' ? startRow + i : startRow;
-      const col = orientation === 'horizontal' ? startCol + i : startCol;
+      const row = orientation === "vertical" ? startRow + i : startRow;
+      const col = orientation === "horizontal" ? startCol + i : startCol;
 
       if (row < 1 || row > 8 || col < 1 || col > 8) {
         return false;
@@ -251,8 +258,10 @@ class Battleship {
   }
 
   IsPositionOccupied(row, col) {
-    return this.enemyFleet.some(ship =>
-      ship.positions.some(pos => pos.row === row && pos.column === letters.get(col))
+    return this.enemyFleet.some((ship) =>
+      ship.positions.some(
+        (pos) => pos.row === row && pos.column === letters.get(col),
+      ),
     );
   }
 }
