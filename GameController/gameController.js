@@ -31,6 +31,10 @@ class GameController {
   static isShipValid(ship) {
     return ship.positions.length == ship.size;
   }
+
+  static isAllShipsSunk(ships) {
+    return ships.every((ship) => ship.isSunk());
+  }
 }
 
 module.exports = GameController;

@@ -86,6 +86,12 @@ class Battleship {
         position,
       );
 
+      var isFleetRuined = gameController.isAllShipsSunk(this.enemyFleet);
+      if (isFleetRuined) {
+        console.log("You are the winner!");
+        break
+      }
+
       telemetryWorker.postMessage({
         eventName: "Player_ShootPosition",
         properties: { Position: position.toString(), IsHit: isHit },
@@ -112,6 +118,12 @@ class Battleship {
         this.myFleet,
         computerPos,
       );
+
+      var isFleetRuined = gameController.isAllShipsSunk(this.myFleet);
+      if (isFleetRuined) {
+        console.log("You lost!");
+        break
+      }
 
       telemetryWorker.postMessage({
         eventName: "Computer_ShootPosition",
