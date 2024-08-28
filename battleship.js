@@ -89,7 +89,7 @@ class Battleship {
       var isFleetRuined = gameController.isAllShipsSunk(this.enemyFleet);
       if (isFleetRuined) {
         console.log("You are the winner!");
-        break
+        break;
       }
 
       telemetryWorker.postMessage({
@@ -122,7 +122,7 @@ class Battleship {
       var isFleetRuined = gameController.isAllShipsSunk(this.myFleet);
       if (isFleetRuined) {
         console.log("You lost!");
-        break
+        break;
       }
 
       telemetryWorker.postMessage({
@@ -179,32 +179,52 @@ class Battleship {
       .map((ship) => new Ship(ship.name, ship.size));
 
     console.log(
-      `Please position your fleet (Game board size is from ${cliColor.yellow(
-        "A",
-      )} to ${cliColor.yellow("H")} and ${cliColor.yellow(
-        "1",
-      )} to ${cliColor.yellow("8")}) :`,
+      `Please position your fleet (Game board size is from ${cliColor.yellow("A")} to ${cliColor.yellow("H")} and ${cliColor.yellow("1")} to ${cliColor.yellow("8")}) :`,
     );
 
-    this.myFleet.forEach(function (ship) {
+    this.myFleet.forEach((ship) => {
       console.log();
       console.log(
-        `Please enter the positions for the ${
-          ship.name
-        } (size: ${cliColor.yellow(ship.size)})`,
+        `Please enter the positions for the ${ship.name} (size: ${cliColor.yellow(ship.size)})`,
       );
-      for (var i = 1; i < ship.size + 1; i++) {
-        console.log(`Enter position ${i} of ${ship.size} (i.e A3):`);
-        const position = readline.question();
-        telemetryWorker.postMessage({
-          eventName: "Player_PlaceShipPosition",
-          properties: {
-            Position: position,
-            Ship: ship.name,
-            PositionInShip: i,
-          },
-        });
-        ship.addPosition(Battleship.ParsePosition(position));
+
+      let validPlacement = false;
+      while (!validPlacement) {
+        let positions = [];
+        for (let i = 1; i <= ship.size; i++) {
+          console.log(`Enter position ${i} of ${ship.size} (e.g., A3):`);
+          const pos = Battleship.ParsePosition(readline.question());
+
+          // Check if the position is already entered for this ship
+          if (
+            positions.some((p) => p.row === pos.row && p.column === pos.column)
+          ) {
+            console.log(
+              cliColor.red(
+                "Error: This position has already been entered. Please re-enter the positions for this ship.",
+              ),
+            );
+            positions = []; // Clear the positions to start over
+            break;
+          }
+
+          if (this.IsPositionOccupied(this.myFleet, pos.row, pos.column)) {
+            console.error(
+              `Position ${pos} already occupied by another ship. Please re-enter the positions for this ship.`,
+            );
+            positions = []; // Clear the positions to start over
+            break;
+          }
+
+          positions.push(pos);
+        }
+
+        if (positions.length === ship.size) {
+          positions.forEach((pos) => ship.addPosition(pos));
+          validPlacement = true;
+        } else {
+          console.log(cliColor.red("Invalid positions. Please try again."));
+        }
       }
     });
   }
@@ -233,6 +253,9 @@ class Battleship {
       for (let i = 0; i < ship.size; i++) {
         const row = orientation === "vertical" ? startRow + i : startRow;
         const col = orientation === "horizontal" ? startCol + i : startCol;
+        if (this.IsPositionOccupied(this.enemyFleet, row, col)) {
+          return false;
+        }
         ship.addPosition(new position(letters.get(col), row));
       }
       return true;
@@ -247,18 +270,15 @@ class Battleship {
       const col = orientation === "horizontal" ? startCol + i : startCol;
 
       if (row < 1 || row > 8 || col < 1 || col > 8) {
-        return false;
-      }
-
-      if (this.IsPositionOccupied(row, col)) {
+        console.error("Invalid position: out of bounds");
         return false;
       }
     }
     return true;
   }
 
-  IsPositionOccupied(row, col) {
-    return this.enemyFleet.some((ship) =>
+  IsPositionOccupied(fleet, row, col) {
+    return fleet.some((ship) =>
       ship.positions.some(
         (pos) => pos.row === row && pos.column === letters.get(col),
       ),
