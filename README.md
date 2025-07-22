@@ -13,6 +13,7 @@ You might want to install these extensions to better support this project in VSC
 * Cucumber (Gherkin) Full Support https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete
 
 ## Run locally
+
 Install packages
 
 ```bash
@@ -21,6 +22,11 @@ npm install
 
 Run battleship
 
+```bash
+npm start
+```
+
+Or alternatively:
 ```bash
 node index.js
 ```
@@ -32,12 +38,12 @@ Execute all tests
 npm test
 ```
 
-Execute Mocha tests
+Execute Mocha tests only
 ```bash
 mocha './**/*Tests.js'
 ```
 
-Execute Cucumber-js tests
+Execute Cucumber-js tests only
 ```bash
 ./node_modules/.bin/cucumber-js .\GameController_ATDD
 ```
@@ -50,5 +56,5 @@ To run and test the project in a container, use these steps:
 docker run -it -v ${PWD}:/battleship -w /battleship node bash
 npm install
 npm test
-node index.js
+npm start
 ```
