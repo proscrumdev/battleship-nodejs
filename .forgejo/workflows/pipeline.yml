@@ -1,0 +1,17 @@
+on: [push]
+jobs: 
+  ci: 
+    runs-on: docker
+    container: 
+      image: node:24-alpine
+    steps: 
+      - uses: actions/checkout@v4
+      - run: | 
+          npm install
+          ./node_modules/.bin/mocha ./**/*Tests.js
+          ./node_modules/.bin/cucumber-js ./GameController_ATDD
+          npx eslint .
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: unit-test-results
+          path: testresults_mocha.xml

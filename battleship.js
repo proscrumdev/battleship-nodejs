@@ -1,4 +1,4 @@
-const { Worker, isMainThread } = require('worker_threads');
+const { Worker } = require('worker_threads');
 const readline = require('readline-sync');
 const gameController = require("./GameController/gameController.js");
 const cliColor = require('cli-color');
@@ -71,7 +71,7 @@ class Battleship {
             console.log(isHit ? "Yeah ! Nice hit !" : "Miss");
 
             var computerPos = this.GetRandomPosition();
-            var isHit = gameController.CheckIsHit(this.myFleet, computerPos);
+            isHit = gameController.CheckIsHit(this.myFleet, computerPos);
 
             telemetryWorker.postMessage({eventName: 'Computer_ShootPosition', properties:  {Position: computerPos.toString(), IsHit: isHit}});
 

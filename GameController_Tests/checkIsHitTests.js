@@ -7,10 +7,9 @@ describe('checkIsHitTests', function () {
 
   it('should return true if there is a ship at the shooting position', function () {
     var ships = gameController.InitializeShips();
-    counter = 1;
+    var counter = 1;
     ships.forEach(ship => {
       for (var i = 1; i <= ship.size; i++) {
-        column = letters.get(counter);
         ship.addPosition(new position(letters.get(counter), i))
       }
       counter++;
@@ -21,7 +20,7 @@ describe('checkIsHitTests', function () {
 
   it('should return false if there is no ship at the shooting position', function () {
     var ships = gameController.InitializeShips();
-    counter = 1;
+    var counter = 1;
     ships.forEach(ship => {
       for (var i = 1; i <= ship.size; i++) {
         ship.addPosition(new position(letters.get(counter), i))
@@ -36,7 +35,7 @@ describe('checkIsHitTests', function () {
     var ships = gameController.InitializeShips();
     assert.throws(
       () => {
-        var actual = gameController.CheckIsHit(ships, undefined);
+        gameController.CheckIsHit(ships, undefined);
       }
     )
   });
@@ -44,7 +43,7 @@ describe('checkIsHitTests', function () {
   it('should throw an exception if ship is undefined', function () {
     assert.throws(
       () => {
-        var actual = gameController.CheckIsHit(undefined, new position(letters.G, 1));
+        gameController.CheckIsHit(undefined, new position(letters.G, 1));
       }
     )
   });

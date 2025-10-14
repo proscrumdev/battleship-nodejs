@@ -1,4 +1,4 @@
-const { Worker, isMainThread } = require('worker_threads');
+const { Worker } = require('worker_threads');
 const readline = require('readline-sync');
 
 let telemetryWorker = new Worker("./TelemetryClient/telemetryClient2.js");
