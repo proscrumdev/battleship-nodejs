@@ -20,11 +20,11 @@ steps:
   displayName: 'npm install'
 
 - script: |
-    ./node_modules/.bin/mocha ./**/*Tests.js --reporter mocha-junit-reporter --reporter-options mochaFile=testresults_mocha.xml
+    ./node_modules/.bin/mocha ./**/*Tests.js --reporter xunit --reporter-options output=testresults_mocha.xml
   displayName: "run Mocha tests"
 
 - script: |
-    ./node_modules/.bin/cucumber-js ./GameController_ATDD --format json | ./node_modules/.bin/cucumber-junit > testresults_cucumber.xml
+    ./node_modules/.bin/cucumber-js ./GameController_ATDD --format junit:testresults_cucumber.xml
   displayName: "run Cucumber tests"
 
 - task: PublishTestResults@2
